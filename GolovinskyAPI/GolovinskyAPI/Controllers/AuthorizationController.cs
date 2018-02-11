@@ -12,7 +12,7 @@ namespace GolovinskyAPI.Controllers
     public class AuthorizationController : ControllerBase
     {
         // GET: api/Authorization/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet]
         public string Get(int id)
         {
             return "value";

@@ -12,7 +12,7 @@ namespace GolovinskyAPI.Controllers
     public class AdditionalImgController : ControllerBase
     {
         // GET: api/AdditionalImg/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet]
         public string Get(int id)
         {
             return "value";

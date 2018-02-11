@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GolovinskyAPI.Infrastructure;
+using GolovinskyAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,17 +13,27 @@ namespace GolovinskyAPI.Controllers
     [Route("api/Load")]
     public class LoadController : ControllerBase
     {
-        // GET: api/Load/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        IRepository repo;
+        public LoadController(IRepository r)
         {
-            return "value";
+            repo = r;
+        }
+
+        // GET: api/Load/5
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            var res = repo.GetCustId(id);
+            return Ok(res);
         }
 
         // POST: api/Load
         [HttpPost]
-        public void Post([FromBody]string value)
+        public IActionResult Post([FromBody] SearchAvitoPictureInput model)
         {
+            if (!ModelState.IsValid)
+                return BadRequest();
+            return Ok(repo.SearchAvitoPicture(model));
         }
     }
 }
