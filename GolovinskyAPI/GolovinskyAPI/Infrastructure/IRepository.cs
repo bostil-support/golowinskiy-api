@@ -10,5 +10,10 @@ namespace GolovinskyAPI.Infrastructure
     {
        int GetCustId(int subdomain);
         List<SearchAvitoPictureOutput> SearchAvitoPicture(SearchAvitoPictureInput input);
+        List<SearchPictureOutputModel> SearchPicture(SearchPictureInputModel input);
+        byte[] GetImageMobile(string id, string name);
+        SearchPictureInfoOutputModel SearchPictureInfo(SearchPictureInfoInputModel input);
+        int CheckWebPassword(LoginModel input);
+        RegisterOutputModel AddWebCustomerCompany(RegisterInputModel input);
     }
 }

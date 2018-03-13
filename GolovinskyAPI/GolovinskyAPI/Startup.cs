@@ -25,6 +25,7 @@ namespace GolovinskyAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddTransient<IRepository, Repository>(provider => new Repository(connection));
             services.AddMvc();
@@ -37,6 +38,10 @@ namespace GolovinskyAPI
             //{
             //    app.UseDeveloperExceptionPage();
             //}
+            app.UseCors(builder => builder.AllowAnyOrigin()
+                                          .AllowAnyMethod()
+                                          .AllowAnyHeader()
+                                          .AllowCredentials());
             app.UseDeveloperExceptionPage();
             app.UseDefaultFiles();
             app.UseStaticFiles();
