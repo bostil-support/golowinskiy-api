@@ -38,7 +38,12 @@ namespace GolovinskyAPI.Controllers
                 var res = repo.CheckWebPassword(model);
                 if (res == 0)
                 {
-                    return BadRequest("Авторизация не пройдена");
+                    return Ok(new LoginSuccessModel
+                    {
+                        Result = res,
+                        IsItBoss = false,
+                        Message = "Авторизация не пройдена"
+                    });
                 }
                 else if(res == model.Cust_ID_Main)
                 {
