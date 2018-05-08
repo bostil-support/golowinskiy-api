@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GolovinskyAPI.Models.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,5 +23,6 @@ namespace GolovinskyAPI.Models
         public string v_isnoprice { get; set; }
         public string isprice { get; set; }
         public string youtube { get; set; }
+        public List<Image> additionalImages { get; set; }
     }
 }

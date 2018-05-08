@@ -1,5 +1,7 @@
 ﻿using Dapper;
 using GolovinskyAPI.Models;
+using GolovinskyAPI.Models.Entities;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -67,12 +69,33 @@ namespace GolovinskyAPI.Infrastructure
         public SearchPictureInfoOutputModel  SearchPictureInfo(SearchPictureInfoInputModel input)
         {
             var res = new SearchPictureInfoOutputModel();
+            List<Image> additionalOutputImage = new List<Image>();
+
             using (IDbConnection db = new SqlConnection(connection))
             {
                 res = db.Query<SearchPictureInfoOutputModel>("sp_SearchPictureInfo", new { Prc_ID = input.Prc_ID, Cust_ID = input.Cust_ID, AppCode = input.AppCode},
                              commandType: CommandType.StoredProcedure).FirstOrDefault();
             }
+
+             additionalOutputImage = this.GetAllAdditionalPictures(input);
+
+            res.additionalImages = additionalOutputImage;
+            
             return res;
+        }
+
+        private List<Image> GetAllAdditionalPictures(SearchPictureInfoInputModel input)
+        {
+            List<Image> list = new List<Image>();
+            
+            using (IDbConnection db = new SqlConnection(connection))
+            {
+                //search additional images
+                list = db.Query<Image>("sp_SearchGetAvitoAddImage", new { Prc_ID = input.Prc_ID, Cust_ID = input.Cust_ID, AppCode = input.AppCode },
+                    commandType: CommandType.StoredProcedure).ToList();//.to<AdditionalOutputImage>(); //.All<AdditionalOutputImage>();
+            }
+
+            return list;
         }
 
         public int CheckWebPassword(LoginModel input)

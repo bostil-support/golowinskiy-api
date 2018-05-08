@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GolovinskyAPI.Infrastructure;
+using GolovinskyAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +13,12 @@ namespace GolovinskyAPI.Controllers
     [Route("api/AdditionalImg")]
     public class AdditionalImgController : ControllerBase
     {
+        IRepository repo;
+        public AdditionalImgController(IRepository r)
+        {
+            repo = r;
+        }
+
         // GET: api/AdditionalImg/5
         [HttpGet]
         public string Get(int id)
@@ -22,6 +30,7 @@ namespace GolovinskyAPI.Controllers
         [HttpPost]
         public void Post([FromBody]string value)
         {
+
         }
         
         // PUT: api/AdditionalImg/5
