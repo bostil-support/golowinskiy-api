@@ -15,5 +15,6 @@ namespace GolovinskyAPI.Infrastructure
         SearchPictureInfoOutputModel SearchPictureInfo(SearchPictureInfoInputModel input);
         int CheckWebPassword(LoginModel input);
         RegisterOutputModel AddWebCustomerCompany(RegisterInputModel input);
+        string RecoveryPassword(PasswordRecoveryInput input);
     }
 }

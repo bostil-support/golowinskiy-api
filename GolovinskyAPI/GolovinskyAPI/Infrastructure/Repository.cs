@@ -77,9 +77,9 @@ namespace GolovinskyAPI.Infrastructure
                              commandType: CommandType.StoredProcedure).FirstOrDefault();
             }
 
-             additionalOutputImage = this.GetAllAdditionalPictures(input);
+            additionalOutputImage = this.GetAllAdditionalPictures(input);
 
-            res.additionalImages = additionalOutputImage;
+            res.AdditionalImages = additionalOutputImage;
             
             return res;
         }
@@ -92,7 +92,7 @@ namespace GolovinskyAPI.Infrastructure
             {
                 //search additional images
                 list = db.Query<Image>("sp_SearchGetAvitoAddImage", new { Prc_ID = input.Prc_ID, Cust_ID = input.Cust_ID, AppCode = input.AppCode },
-                    commandType: CommandType.StoredProcedure).ToList();//.to<AdditionalOutputImage>(); //.All<AdditionalOutputImage>();
+                    commandType: CommandType.StoredProcedure).ToList();
             }
 
             return list;
@@ -107,11 +107,22 @@ namespace GolovinskyAPI.Infrastructure
                 p.Add("@UserName", input.UserName);
                 p.Add("@Password", input.Password);
                 p.Add("@Cust_ID_Main", input.Cust_ID_Main);
-                p.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                p.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output, size: 50);
                 var procRes = db.Execute("sp_CheckWebPassword", p,
                              commandType: CommandType.StoredProcedure);
                 res = p.Get<int>("@Result");
 
+            }
+            return res;
+        }
+
+        public string RecoveryPassword(PasswordRecoveryInput input)
+        {
+            string res;
+            using (IDbConnection db = new SqlConnection(connection))
+            {
+                res = db.Query<string>("sp_RecoveryPassword", new { E_mail = input.EMail },
+                                commandType: CommandType.StoredProcedure).FirstOrDefault();               
             }
             return res;
         }
@@ -131,8 +142,8 @@ namespace GolovinskyAPI.Infrastructure
                 p.Add("@Cust_ID_Main", input.Cust_ID_Main);
                 p.Add("@Cust_ID", dbType: DbType.Int32, direction: ParameterDirection.Output);
                 p.Add("@Comp_ID", dbType: DbType.Int32, direction: ParameterDirection.Output);
-                p.Add("@AuthCode", dbType: DbType.String, direction: ParameterDirection.Output);
-                p.Add("@AuthPass", dbType: DbType.String, direction: ParameterDirection.Output);
+                p.Add("@AuthCode", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+                p.Add("@AuthPass", dbType: DbType.String, direction: ParameterDirection.Output, size: 20);
                 var procRes = db.Execute("sp_AddWebCustomerCompany", p,
                              commandType: CommandType.StoredProcedure);
                 res = new RegisterOutputModel
@@ -142,7 +153,6 @@ namespace GolovinskyAPI.Infrastructure
                     AuthCode = p.Get<string>("@AuthCode"),
                     AuthPass = p.Get<string>("@AuthPass")
                 };
-
             }
             return res;
         }

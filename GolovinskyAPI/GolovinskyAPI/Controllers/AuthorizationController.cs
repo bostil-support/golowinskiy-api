@@ -69,10 +69,16 @@ namespace GolovinskyAPI.Controllers
         [HttpPut]
         public IActionResult Put([FromBody]RegisterInputModel model)
         {
+            RegisterOutputModel regOutputModel = repo.AddWebCustomerCompany(model);
             if (!ModelState.IsValid)
                 return BadRequest();
-            return Ok(repo.AddWebCustomerCompany(model));
-
+            if (regOutputModel.Cust_ID == 999999 && regOutputModel.AuthCode.Length == 0)
+            {
+                regOutputModel.Message = "Пользователь с таким email уже зарегистрирован";
+                regOutputModel.Result = false;
+                return Ok(regOutputModel);
+            }
+            return Ok(regOutputModel);
         }
     }
 }

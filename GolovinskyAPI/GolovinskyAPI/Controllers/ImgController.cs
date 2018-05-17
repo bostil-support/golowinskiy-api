@@ -50,8 +50,7 @@ namespace GolovinskyAPI.Controllers
             {
                 return Ok(repo.SearchPictureInfo(model));
             }
-               
-           
+                  
         }
 
         // PUT: api/Img/5

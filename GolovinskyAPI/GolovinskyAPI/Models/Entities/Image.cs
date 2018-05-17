@@ -7,7 +7,7 @@ namespace GolovinskyAPI.Models.Entities
 {
     public class Image
     {
-        public int imageOrder { get; set; } = 0;
-        public string nameImage { get; set; }
+        public int ImageOrder { get; set; } = 0;
+        public string t_image { get; set; }
     }
 }
