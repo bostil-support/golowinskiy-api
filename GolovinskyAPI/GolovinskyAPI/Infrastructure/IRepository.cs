@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GolovinskyAPI.Models;
+using GolovinskyAPI.Models.Orders;
+using GolovinskyAPI.Models.ViewModels.Categories;
+using Microsoft.AspNetCore.Server.Kestrel.Internal.System.Collections.Sequences;
 
 namespace GolovinskyAPI.Infrastructure
 {
@@ -16,5 +19,9 @@ namespace GolovinskyAPI.Infrastructure
         int CheckWebPassword(LoginModel input);
         RegisterOutputModel AddWebCustomerCompany(RegisterInputModel input);
         string RecoveryPassword(PasswordRecoveryInput input);
+        NewOrderOutputModel AddNewOrder(NewOrderInputModel input);
+        bool AddItemToCart(NewOrderItemInputModel input);
+        //ArrayList<SearchAvitoPictureOutput> GetCategory(SearchAvitoPictureInput input);
+        List<SearchAvitoPictureOutput> GetCategoryItems(SearchAvitoPictureInput input);
     }
 }

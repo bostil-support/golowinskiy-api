@@ -1,6 +1,9 @@
 ﻿using Dapper;
 using GolovinskyAPI.Models;
 using GolovinskyAPI.Models.Entities;
+using GolovinskyAPI.Models.Orders;
+using GolovinskyAPI.Models.ViewModels.Categories;
+using Microsoft.AspNetCore.Server.Kestrel.Internal.System.Collections.Sequences;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -13,6 +16,7 @@ namespace GolovinskyAPI.Infrastructure
     public class Repository : IRepository
     {
         string connection = null;
+        private List<SearchAvitoPictureOutput> categories = new List<SearchAvitoPictureOutput>();
         public Repository(string conn)
         {
             connection = conn;
@@ -40,6 +44,98 @@ namespace GolovinskyAPI.Infrastructure
             }
             return res;
         }
+
+        //get all menu items
+        public List<SearchAvitoPictureOutput> GetCategoryItems(SearchAvitoPictureInput input)
+        {
+            var categoryList = new List<SearchAvitoPictureOutput>();
+            
+            using (IDbConnection db = new SqlConnection(connection))
+            {
+                categoryList = db.Query<SearchAvitoPictureOutput>("sp_SearchAvitoPicture", new { 
+                    Catalog = input.Catalog, 
+                    Table = input.Table, 
+                    Id = input.Id, 
+                    Cust_ID_Main = input.Cust_ID_Main }, commandType: CommandType.StoredProcedure).ToList();
+            }                
+            foreach(var cat in categoryList)
+            {
+                if(categoryList.Count != 0)
+                {                    
+                    cat.Table = input.Table + 1;
+                    cat.parent_id = input.Id;
+                    cat.ListInnerCat = new List<SearchAvitoPictureOutput>();
+                    categories.Add(cat);
+                    GetCategoryItems(new SearchAvitoPictureInput{
+                        Catalog = input.Catalog, 
+                        Id = cat.id, 
+                        Cust_ID_Main = cat.cust_id, 
+                        Table = cat.Table });
+                } else {
+                    continue;
+                }
+            }
+            return categories;
+        }
+
+        //get separate category item
+        //public Category AddCategoryItem(Category input, int level = 0)
+        //{
+            /* var catPictureOut = new SearchAvitoPictureOutput();
+            
+            using (IDbConnection db = new SqlConnection(connection))
+            {
+                catPictureOut = db.Query<SearchAvitoPictureOutput>("sp_SearchAvitoPicture", new { Catalog = input.Catalog, Table = input.Table, Id = input.Id, Cust_ID_Main = input.Cust_ID_Main },
+                             commandType: CommandType.StoredProcedure).FirstOrDefault();
+                
+                if(catPictureOut.id != null)
+                {
+                    Category cat = new Category {
+                        Cust_ID_Main = catPictureOut.cust_id, 
+                        Parent_Category_Id = input.Id, 
+                        Id = catPictureOut.id, 
+                        IsShow = catPictureOut.isshow, 
+                        Picture = catPictureOut.picture,
+                        Level = level 
+                    };
+                    categories.Add(cat);
+
+                    return cat;
+                }
+                return null;
+            } */
+        //}
+
+
+        
+        //public ArrayList<SearchAvitoPictureOutput>  GetCategory(SearchAvitoPictureInput input)
+        //{
+            /* var inputCategoryModel = new SearchAvitoPictureInput();
+            var categoryList = new List<SearchAvitoPictureOutput>();
+            using (IDbConnection db = new SqlConnection(connection))
+            {
+                categoryList = db.Query<SearchAvitoPictureOutput>("sp_SearchAvitoPicture", new { Catalog = input.Catalog, Table = input.Table, Id = input.Id, Cust_ID_Main = input.Cust_ID_Main },
+                             commandType: CommandType.StoredProcedure).ToList();
+            }
+                        
+            foreach(var cat in categoryList)
+            if(cat.id == null)
+            {
+                input.Table = 1;
+                continue;
+            } else {
+                inputCategoryModel = new SearchAvitoPictureInput {
+                    Catalog = input.Catalog,
+                    Table = input.Table + 1,
+                    Id = cat.id,
+                    Cust_ID_Main = input.Cust_ID_Main
+                };
+                categories.Add(cat);
+                
+                categories = GetCategory(inputCategoryModel);    
+            }
+            return categories; */
+        //}
 
         public List<SearchPictureOutputModel> SearchPicture(SearchPictureInputModel input)
         {
@@ -155,6 +251,51 @@ namespace GolovinskyAPI.Infrastructure
                 };
             }
             return res;
+        }
+
+        public NewOrderOutputModel AddNewOrder(NewOrderInputModel input)
+        {
+            var result = new NewOrderOutputModel();
+            dynamic count_id;
+            
+            using (IDbConnection db = new SqlConnection(connection))
+            {
+                DynamicParameters p = new DynamicParameters();
+                p.Add("@Cust_ID", input.Cust_ID);
+                p.Add("@Cur_Code", input.Cur_Code);
+                p.Add("@Ord_ID", dbType: DbType.Int32, direction: ParameterDirection.Output, size: 10);
+                p.Add("@Ord_No", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+            
+                var res = db.Execute("sp_AddNewOrder", p, commandType: CommandType.StoredProcedure);
+                            
+                result = new NewOrderOutputModel
+                {
+                    Ord_ID = p.Get<int?>("@Ord_ID"),
+                    Ord_No = p.Get<dynamic>("@Ord_No")
+                };
+            }
+            return result;
+        }
+
+        public bool AddItemToCart(NewOrderItemInputModel input)
+        {
+            
+        string res;
+            using (IDbConnection db = new SqlConnection(connection))
+            {
+                res = db.Query<string>("sp_AddNewOrdItem", new { 
+                        OrdTtl_Id= input.OrdTtl_Id,  
+                        OI_No = input.OI_No,
+                        Ctlg_No = input.Ctlg_No,
+                        Qty = input.Qty,
+                        Ctlg_Name = input.Ctlg_Name,
+                        Sup_ID = input.Sup_ID,
+                        Descr = input.Descr
+                    },
+                    commandType: CommandType.StoredProcedure).FirstOrDefault();
+            }
+                   
+            return true;
         }
     }
 }

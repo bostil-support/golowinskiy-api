@@ -6,6 +6,7 @@ using GolovinskyAPI.Infrastructure;
 using GolovinskyAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using GolovinskyAPI.Models.ViewModels.Categories;
 
 namespace GolovinskyAPI.Controllers
 {
@@ -34,6 +35,18 @@ namespace GolovinskyAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
             return Ok(repo.SearchAvitoPicture(model));
+        }
+        
+        [HttpPost("/api/categories/")]
+        public IActionResult GetCategories([FromBody] SearchAvitoPictureInput model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            CategoryRecursion catRecursion = new CategoryRecursion();
+            List<SearchAvitoPictureOutput> outputCategories = repo.GetCategoryItems(model);   
+            //var cat = catRecursion.GenerateCategories(outputCategories);
+            return Ok(catRecursion.GenerateCategories(outputCategories));
         }
     }
 }
