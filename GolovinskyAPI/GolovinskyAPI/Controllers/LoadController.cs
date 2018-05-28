@@ -36,7 +36,7 @@ namespace GolovinskyAPI.Controllers
                 return BadRequest();
             return Ok(repo.SearchAvitoPicture(model));
         }
-        
+        //POST: api/categories
         [HttpPost("/api/categories/")]
         public IActionResult GetCategories([FromBody] SearchAvitoPictureInput model)
         {
@@ -45,7 +45,7 @@ namespace GolovinskyAPI.Controllers
 
             CategoryRecursion catRecursion = new CategoryRecursion();
             List<SearchAvitoPictureOutput> outputCategories = repo.GetCategoryItems(model);   
-            //var cat = catRecursion.GenerateCategories(outputCategories);
+            
             return Ok(catRecursion.GenerateCategories(outputCategories));
         }
     }

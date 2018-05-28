@@ -42,7 +42,7 @@ namespace GolovinskyAPI.Controllers
             return Ok(res);
         }
 
-        [HttpPost("api/addtocart/")]
+        [HttpPost("/api/addtocart/")]
         public IActionResult AddToCart([FromBody] NewOrderItemInputModel model)
         {
             bool res;
@@ -59,5 +59,38 @@ namespace GolovinskyAPI.Controllers
                 return Ok(new { Message = "Не верные параметры. Товар не добавлне в корзину.", Result = false });
             }
         }
+
+        [HttpPost("/api/order/changeqty/")]
+        public IActionResult ChangeQty([FromBody] NewOrderItemInputModel model)
+        {
+            bool res;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            res = repo.ChangeQty(model);
+            if (!res)
+            {
+                return Ok(new { Result = false });
+            }
+            return Ok(new { Result = true });
+        }
+
+        
+        /* В самом конце формирования заказа запускается процедура
+          [dbo].[sp_OrderAsSMS], где пользователь в форме указывает адрес доставки 
+        */
+        [HttpPost("/api/order/save/")]
+        public IActionResult SaveOrder([FromBody] NewOrderShippingInputModel model)
+        {
+            bool res;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            res = repo.SaveOrder(model);
+            
+            return Ok(new { Result = res });
+        }  
     }
 }

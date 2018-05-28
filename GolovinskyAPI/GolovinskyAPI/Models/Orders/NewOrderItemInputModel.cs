@@ -9,7 +9,7 @@ namespace GolovinskyAPI.Models.Orders
     public class NewOrderItemInputModel
     {
         //номер заказа – выходной параметр @Ord_ID процедуры [dbo].[sp_AddNewOrder]
-         public int OrdTtl_Id { get; set; }
+        public int OrdTtl_Id { get; set; }
         //порядковый номер позиции в заказе
         public int @OI_No { get; set; }
         //номер по каталогу из рекордсета процедуры [sp_SearchPictureInfo]

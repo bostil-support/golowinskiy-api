@@ -52,90 +52,12 @@ namespace GolovinskyAPI.Infrastructure
             
             using (IDbConnection db = new SqlConnection(connection))
             {
-                categoryList = db.Query<SearchAvitoPictureOutput>("sp_SearchAvitoPicture", new { 
-                    Catalog = input.Catalog, 
-                    Table = input.Table, 
-                    Id = input.Id, 
-                    Cust_ID_Main = input.Cust_ID_Main }, commandType: CommandType.StoredProcedure).ToList();
+                categoryList = db.Query<SearchAvitoPictureOutput>("sp_SearchAvitoPictureAll", new {
+                    Cust_ID_Main = input.Cust_ID_Main 
+                }, commandType: CommandType.StoredProcedure).ToList();
             }                
-            foreach(var cat in categoryList)
-            {
-                if(categoryList.Count != 0)
-                {                    
-                    cat.Table = input.Table + 1;
-                    cat.parent_id = input.Id;
-                    cat.ListInnerCat = new List<SearchAvitoPictureOutput>();
-                    categories.Add(cat);
-                    GetCategoryItems(new SearchAvitoPictureInput{
-                        Catalog = input.Catalog, 
-                        Id = cat.id, 
-                        Cust_ID_Main = cat.cust_id, 
-                        Table = cat.Table });
-                } else {
-                    continue;
-                }
-            }
-            return categories;
+            return categoryList;
         }
-
-        //get separate category item
-        //public Category AddCategoryItem(Category input, int level = 0)
-        //{
-            /* var catPictureOut = new SearchAvitoPictureOutput();
-            
-            using (IDbConnection db = new SqlConnection(connection))
-            {
-                catPictureOut = db.Query<SearchAvitoPictureOutput>("sp_SearchAvitoPicture", new { Catalog = input.Catalog, Table = input.Table, Id = input.Id, Cust_ID_Main = input.Cust_ID_Main },
-                             commandType: CommandType.StoredProcedure).FirstOrDefault();
-                
-                if(catPictureOut.id != null)
-                {
-                    Category cat = new Category {
-                        Cust_ID_Main = catPictureOut.cust_id, 
-                        Parent_Category_Id = input.Id, 
-                        Id = catPictureOut.id, 
-                        IsShow = catPictureOut.isshow, 
-                        Picture = catPictureOut.picture,
-                        Level = level 
-                    };
-                    categories.Add(cat);
-
-                    return cat;
-                }
-                return null;
-            } */
-        //}
-
-
-        
-        //public ArrayList<SearchAvitoPictureOutput>  GetCategory(SearchAvitoPictureInput input)
-        //{
-            /* var inputCategoryModel = new SearchAvitoPictureInput();
-            var categoryList = new List<SearchAvitoPictureOutput>();
-            using (IDbConnection db = new SqlConnection(connection))
-            {
-                categoryList = db.Query<SearchAvitoPictureOutput>("sp_SearchAvitoPicture", new { Catalog = input.Catalog, Table = input.Table, Id = input.Id, Cust_ID_Main = input.Cust_ID_Main },
-                             commandType: CommandType.StoredProcedure).ToList();
-            }
-                        
-            foreach(var cat in categoryList)
-            if(cat.id == null)
-            {
-                input.Table = 1;
-                continue;
-            } else {
-                inputCategoryModel = new SearchAvitoPictureInput {
-                    Catalog = input.Catalog,
-                    Table = input.Table + 1,
-                    Id = cat.id,
-                    Cust_ID_Main = input.Cust_ID_Main
-                };
-                categories.Add(cat);
-                
-                categories = GetCategory(inputCategoryModel);    
-            }
-            return categories; */
-        //}
 
         public List<SearchPictureOutputModel> SearchPicture(SearchPictureInputModel input)
         {
@@ -279,8 +201,7 @@ namespace GolovinskyAPI.Infrastructure
 
         public bool AddItemToCart(NewOrderItemInputModel input)
         {
-            
-        string res;
+            string res;
             using (IDbConnection db = new SqlConnection(connection))
             {
                 res = db.Query<string>("sp_AddNewOrdItem", new { 
@@ -294,7 +215,40 @@ namespace GolovinskyAPI.Infrastructure
                     },
                     commandType: CommandType.StoredProcedure).FirstOrDefault();
             }
-                   
+            if (res != "1")       
+                return false;
+            return true;    
+        }
+
+        /* Для изменения количества по позициям, чтобы обезопасить себя от отключения от канала 
+        интернета может быть применена процедура, которая сразу меняет количество в базе, 
+        причем, если параметр @NewQty сделать равным 0, то позиция из базы удаляется автоматически. 
+        */
+        public bool ChangeQty(NewOrderItemInputModel input)
+        {
+            bool res;
+            using (IDbConnection db = new SqlConnection(connection))
+            {
+                res = db.Query<bool>("sp_ChangeQty", new { 
+                        Ord_ID= input.OrdTtl_Id,  
+                        OI_No = input.OI_No,
+                        NewQty = input.Qty,
+                    },
+                    commandType: CommandType.StoredProcedure).FirstOrDefault();
+            }
+            return res;    
+        }
+
+        public bool SaveOrder(NewOrderShippingInputModel input)
+        {
+            string res;
+            using (IDbConnection db = new SqlConnection(connection))
+            {
+                res = db.Query<string>("sp_OrderAsSMS", input,
+                    commandType: CommandType.StoredProcedure).FirstOrDefault();
+            }
+            if (res.Length == 0)       
+                return false;
             return true;
         }
     }

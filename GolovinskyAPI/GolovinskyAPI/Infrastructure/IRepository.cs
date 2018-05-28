@@ -21,7 +21,9 @@ namespace GolovinskyAPI.Infrastructure
         string RecoveryPassword(PasswordRecoveryInput input);
         NewOrderOutputModel AddNewOrder(NewOrderInputModel input);
         bool AddItemToCart(NewOrderItemInputModel input);
-        //ArrayList<SearchAvitoPictureOutput> GetCategory(SearchAvitoPictureInput input);
+        
         List<SearchAvitoPictureOutput> GetCategoryItems(SearchAvitoPictureInput input);
+        bool ChangeQty(NewOrderItemInputModel input);
+        bool SaveOrder(NewOrderShippingInputModel input); 
     }
 }
