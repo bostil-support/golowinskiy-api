@@ -61,7 +61,9 @@ namespace GolovinskyAPI.Controllers
             var response = new 
             {
                 access_token = endcodedJwt,
-                username = identity.Name
+                username = identity.Name,
+                role = identity.Claims.ElementAt(1).Value,
+                user_id = identity.Claims.ElementAt(2).Value
             };
 
             Response.ContentType = "application/json";
@@ -124,11 +126,12 @@ namespace GolovinskyAPI.Controllers
                 
             if (res != 0)
             {
-                string role = res == model.Cust_ID_Main ? "admin" : "cusstomer";
+                string role = res == model.Cust_ID_Main ? "admin" : "customer";
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimsIdentity.DefaultNameClaimType, model.UserName),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
+                    new Claim(ClaimsIdentity.DefaultRoleClaimType, role),
+                    new Claim("user_id", res.ToString())
                 };
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(
                     claims,
