@@ -6,6 +6,10 @@ using GolovinskyAPI.Infrastructure;
 using GolovinskyAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace GolovinskyAPI.Controllers
 {
@@ -27,15 +31,48 @@ namespace GolovinskyAPI.Controllers
         
         // POST: api/Authorization
         [HttpPost]
-        public IActionResult Post([FromBody] LoginModel model)
+        public async Task Post([FromBody] LoginModel model)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                Response.StatusCode = 400;
+                await Response.WriteAsync("Некорректные данные в запросе");
+                return;
+                //return BadRequest();
             }
-            else
+
+            var identity = GetIdentity(model);
+            if (identity == null)
             {
-                var res = repo.CheckWebPassword(model);
+                Response.StatusCode = 400;
+                await Response.WriteAsync("Не верный логин и пароль");
+                return;
+            }
+            var now = DateTime.UtcNow;
+            var jwt = new JwtSecurityToken(
+                issuer: AuthOptions.ISSUER,
+                audience: AuthOptions.AUDIENCE,
+                notBefore: now,
+                claims: identity.Claims,
+                expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+            
+            var endcodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+            var response = new 
+            {
+                access_token = endcodedJwt,
+                username = identity.Name
+            };
+
+            Response.ContentType = "application/json";
+            await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings 
+            {
+                Formatting = Formatting.Indented 
+            }));
+            //else
+            //{
+
+                /* var res = repo.CheckWebPassword(model);
                 if (res == 0)
                 {
                     return Ok(new LoginSuccessModel
@@ -61,8 +98,8 @@ namespace GolovinskyAPI.Controllers
                         IsItBoss = false,
                         Message = "Вход осуществлен пользователем портала"
                     });
-                }                
-            }             
+                } */                
+            //}             
         }
         
         // PUT: api/Authorization
@@ -79,6 +116,30 @@ namespace GolovinskyAPI.Controllers
                 return Ok(regOutputModel);
             }
             return Ok(regOutputModel);
+        }
+
+        private ClaimsIdentity GetIdentity(LoginModel model)
+        {
+            var res = repo.CheckWebPassword(model);
+                
+            if (res != 0)
+            {
+                string role = res == model.Cust_ID_Main ? "admin" : "cusstomer";
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, model.UserName),
+                    new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
+                };
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity(
+                    claims,
+                    "Token",
+                    ClaimsIdentity.DefaultNameClaimType,
+                    ClaimsIdentity.DefaultRoleClaimType
+                );
+                return claimsIdentity;
+            }
+
+            return null;    
         }
     }
 }

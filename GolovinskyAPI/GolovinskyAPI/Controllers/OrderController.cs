@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using GolovinskyAPI.Models;
 using GolovinskyAPI.Models.Orders;
 using GolovinskyAPI.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GolovinskyAPI.Controllers
 {
@@ -91,6 +92,6 @@ namespace GolovinskyAPI.Controllers
             res = repo.SaveOrder(model);
             
             return Ok(new { Result = res });
-        }  
+        }
     }
 }
