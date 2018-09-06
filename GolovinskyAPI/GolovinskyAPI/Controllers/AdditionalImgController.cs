@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GolovinskyAPI.Infrastructure;
-using GolovinskyAPI.Models;
+using GolovinskyAPI.Models.ViewModels.Images;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,30 +20,38 @@ namespace GolovinskyAPI.Controllers
             repo = r;
         }
 
-        // GET: api/AdditionalImg/5
-        [HttpGet]
-        public string Get(int id)
-        {
-            return "value";
-        }
-        
         // POST: api/AdditionalImg
         [HttpPost]
-        public void Post([FromBody]string value)
+        [Authorize]
+        public IActionResult Post([FromBody] NewAdditionalPictureInputModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest( new { result = false, message = "Не корректный запрос"});
+            }
+            return Ok(repo.InsertAdditionalPictureToProduct(model));
+        }
+        
+        // PUT: api/AdditionalImg/
+        [HttpPut("api/AdditionalImg/")]
+        public IActionResult Put([FromBody] NewAdditionalPictureInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { result = false, message = "Не корректный запрос" });
+            }
+            return Ok(repo.UpdateAdditionalPictureToProduct(model));
+        }
 
-        }
-        
-        // PUT: api/AdditionalImg/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        // DELETE: api/AdditionalImg/
+        [HttpDelete("api/AdditionalImg/")]
+        public IActionResult Delete([FromBody] NewAdditionalPictureInputModel model)
         {
-        }
-        
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { result = false, message = "Не корректный запрос" });
+            }
+            return Ok(repo.DeleteAdditionalPictureToProduct(model));
         }
     }
 }

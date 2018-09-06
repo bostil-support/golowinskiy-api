@@ -10,6 +10,10 @@ using GolovinskyAPI.Services;
 
 namespace GolovinskyAPI.Controllers
 {
+    /// <summary>
+    /// Изменение пароля
+    /// </summary>
+    /// <returns></returns>
     [Produces("application/json")]
     [Route("api/password")]
     public class PasswordController : ControllerBase

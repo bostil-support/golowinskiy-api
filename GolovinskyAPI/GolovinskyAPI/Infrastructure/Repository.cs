@@ -3,23 +3,42 @@ using GolovinskyAPI.Models;
 using GolovinskyAPI.Models.Entities;
 using GolovinskyAPI.Models.Orders;
 using GolovinskyAPI.Models.ViewModels.Categories;
-using Microsoft.AspNetCore.Server.Kestrel.Internal.System.Collections.Sequences;
-using System.Collections;
+using GolovinskyAPI.Models.ViewModels.CustomerInfo;
+using GolovinskyAPI.Models.ViewModels.Images;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
-
+using System.Text;
+using System.Text.RegularExpressions;
+using GolovinskyAPI.Models.ShopInfo;
 
 namespace GolovinskyAPI.Infrastructure
 {
     public class Repository : IRepository
     {
         string connection = null;
+        IDbConnection dbConnection;
         private List<SearchAvitoPictureOutput> categories = new List<SearchAvitoPictureOutput>();
+
         public Repository(string conn)
         {
             connection = conn;
+            dbConnection = new SqlConnection(connection);
+        }
+
+        public ShopInfo GetSubDomain(string url)
+        {
+            ShopInfo result;
+                        
+            using (IDbConnection db = new SqlConnection(connection))
+            {
+                result = db.Query<ShopInfo>("sp_GetShopInfo", new { URL = url },
+                commandType: CommandType.StoredProcedure).FirstOrDefault();
+            }
+            return result;
         }
 
         public int GetCustId(int subdomain)
@@ -31,6 +50,7 @@ namespace GolovinskyAPI.Infrastructure
                              commandType: CommandType.StoredProcedure).First();
                 res = resObj.Cust_ID;
             }
+            
             return res;
         }
 
@@ -45,17 +65,16 @@ namespace GolovinskyAPI.Infrastructure
             return res;
         }
 
-        //get all menu items
-        public List<SearchAvitoPictureOutput> GetCategoryItems(SearchAvitoPictureInput input)
+        // get all menu items
+        public List<SearchAvitoPictureOutput> GetCategoryItems(CategoriesInput input)
         {
             var categoryList = new List<SearchAvitoPictureOutput>();
-            
+
             using (IDbConnection db = new SqlConnection(connection))
             {
-                categoryList = db.Query<SearchAvitoPictureOutput>("sp_SearchAvitoPictureAll", new {
-                    Cust_ID_Main = input.Cust_ID_Main 
-                }, commandType: CommandType.StoredProcedure).ToList();
-            }                
+                categoryList = db.Query<SearchAvitoPictureOutput>("sp_SearchAvitoPictureAll", 
+                    input, commandType: CommandType.StoredProcedure).ToList();
+            }
             return categoryList;
         }
 
@@ -64,48 +83,129 @@ namespace GolovinskyAPI.Infrastructure
             var res = new List<SearchPictureOutputModel>();
             using (IDbConnection db = new SqlConnection(connection))
             {
-                //res = db.Query<SearchPictureOutputModel>("sp_SearchPicture", new { SearchDescr = input.SearchDescr, Cust_ID = input.Cust_ID, Suplier = input.Suplier, ID = input.ID, Option = input.Option, Ctlg_Name = input.Ctlg_Name, Ctlg_No = input.Ctlg_No, CID = input.CID },
-                //             commandType: CommandType.StoredProcedure).ToList();
-                res = db.Query<SearchPictureOutputModel>("sp_SearchPicture", new { SearchDescr = input.SearchDescr, Cust_ID = input.Cust_ID, ID = input.ID }, commandType: CommandType.StoredProcedure).ToList();
+                // new { SearchDescr = input.SearchDescr, Cust_ID = input.Cust_ID, ID = input.ID }
+                res = db.Query<SearchPictureOutputModel>("sp_SearchPicture", input, commandType: CommandType.StoredProcedure).ToList();
             }
+            Each(res, i => ConvertCategoriesToArr(i) );
+
             return res;
         }
 
-        //ПРОЦЕДУРА НЕ РАБОТАЕТ
+        // ПРОЦЕДУРА НЕ РАБОТАЕТ
         public byte[] GetImageMobile(string id, string name)
         {
             var res = new byte[0];
             using (IDbConnection db = new SqlConnection(connection))
             {
-                var resObj = db.Query<byte[]>("sp_GetImageMobile", new { AppCode  = id, img_filename = name},
+                var resObj = db.Query<byte[]>("sp_GetImageMobile", new { AppCode = id, img_filename = name },
                              commandType: CommandType.StoredProcedure).First();
                 res = resObj;
             }
             return res;
         }
 
-        public SearchPictureInfoOutputModel  SearchPictureInfo(SearchPictureInfoInputModel input)
+        // добавление картинки в базу
+        public bool UploadPicture(NewUploadImageInput input)
+        {
+            byte[] fileBytes;
+            using (var fileStream = input.Img.OpenReadStream())
+            using (var ms = new MemoryStream())
+            {
+                fileStream.CopyTo(ms);
+                fileBytes = ms.ToArray();
+            }
+            var result = new NewUploadImageInput2
+            {
+                AppCode = input.AppCode,
+                TImageprev = input.TImageprev,
+                Img = fileBytes 
+            };
+            string resObj;
+            using (dbConnection)
+            {
+                resObj = dbConnection.Query<string>("sp_UploadMobileDBPictAll", result,
+                    commandType: CommandType.StoredProcedure).First();
+            }
+            return (resObj == "1");
+        }
+
+        // добавление дополнительной картинки к товару или объявлению
+        public bool InsertAdditionalPictureToProduct(NewAdditionalPictureInputModel input)
+        {
+            string resObj;
+            using (dbConnection)
+            {
+                resObj = dbConnection.Query<string>("sp_SearchCreateAvitoAddImage", input,
+                    commandType: CommandType.StoredProcedure).First();
+            }
+            if (resObj == "1")
+                return true;
+            return false;
+        }
+
+        // изменение дополнительной картинки к товару или объявлению
+        public bool UpdateAdditionalPictureToProduct(NewAdditionalPictureInputModel input)
+        {
+            string resObj;
+            using (dbConnection)
+            {
+                resObj = dbConnection.Query<string>("sp_SearchUpdateAvitoAddImage", input,
+                    commandType: CommandType.StoredProcedure).First();
+            }
+            return (resObj == "1");
+        }
+
+        // удаление дополнительной картинки к товару или объявлению
+        public bool DeleteAdditionalPictureToProduct(NewAdditionalPictureInputModel input)
+        {
+            string resObj;
+            using (dbConnection)
+            {
+                resObj = dbConnection.Query<string>("sp_SearchDeleteAvitoAddImage", input,
+                    commandType: CommandType.StoredProcedure).First();
+            }
+            return (resObj == "1");
+        }
+
+        // удаление главной картинки к товару или объявлению
+        public bool DeleteMainPicture(SearchPictureInfoInputModel input)
+        {
+            string resObj;
+            using (dbConnection)
+            {
+                resObj = dbConnection.Query<string>("sp_SearchDeleteAvito", input,
+                    commandType: CommandType.StoredProcedure).First();
+            }
+            return (resObj == "1");
+        }
+
+        public SearchPictureInfoOutputModel SearchPictureInfo(SearchPictureInfoInputModel input)
         {
             var res = new SearchPictureInfoOutputModel();
-            List<Image> additionalOutputImage = new List<Image>();
 
             using (IDbConnection db = new SqlConnection(connection))
             {
-                res = db.Query<SearchPictureInfoOutputModel>("sp_SearchPictureInfo", new { Prc_ID = input.Prc_ID, Cust_ID = input.Cust_ID, AppCode = input.AppCode},
+                res = db.Query<SearchPictureInfoOutputModel>("sp_SearchPictureInfo", new { Prc_ID = input.Prc_ID, Cust_ID = input.Cust_ID, AppCode = input.AppCode },
                              commandType: CommandType.StoredProcedure).FirstOrDefault();
             }
 
-            additionalOutputImage = this.GetAllAdditionalPictures(input);
-
-            res.AdditionalImages = additionalOutputImage;
-            
-            return res;
+            if (res != null)
+            {
+                res.AdditionalImages = this.GetAllAdditionalPictures(input);
+                res.Prc_ID = input.Prc_ID;
+                return res;
+            }
+            else
+            {
+                return null;
+            }
         }
 
+        // Показ дополнительных картинок
         private List<Image> GetAllAdditionalPictures(SearchPictureInfoInputModel input)
         {
             List<Image> list = new List<Image>();
-            
+
             using (IDbConnection db = new SqlConnection(connection))
             {
                 //search additional images
@@ -140,7 +240,7 @@ namespace GolovinskyAPI.Infrastructure
             using (IDbConnection db = new SqlConnection(connection))
             {
                 res = db.Query<string>("sp_RecoveryPassword", new { E_mail = input.EMail },
-                                commandType: CommandType.StoredProcedure).FirstOrDefault();               
+                                commandType: CommandType.StoredProcedure).FirstOrDefault();
             }
             return res;
         }
@@ -179,7 +279,7 @@ namespace GolovinskyAPI.Infrastructure
         {
             var result = new NewOrderOutputModel();
             dynamic count_id;
-            
+
             using (IDbConnection db = new SqlConnection(connection))
             {
                 DynamicParameters p = new DynamicParameters();
@@ -187,9 +287,9 @@ namespace GolovinskyAPI.Infrastructure
                 p.Add("@Cur_Code", input.Cur_Code);
                 p.Add("@Ord_ID", dbType: DbType.Int32, direction: ParameterDirection.Output, size: 10);
                 p.Add("@Ord_No", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
-            
+
                 var res = db.Execute("sp_AddNewOrder", p, commandType: CommandType.StoredProcedure);
-                            
+
                 result = new NewOrderOutputModel
                 {
                     Ord_ID = p.Get<int?>("@Ord_ID"),
@@ -204,20 +304,21 @@ namespace GolovinskyAPI.Infrastructure
             string res;
             using (IDbConnection db = new SqlConnection(connection))
             {
-                res = db.Query<string>("sp_AddNewOrdItem", new { 
-                        OrdTtl_Id= input.OrdTtl_Id,  
-                        OI_No = input.OI_No,
-                        Ctlg_No = input.Ctlg_No,
-                        Qty = input.Qty,
-                        Ctlg_Name = input.Ctlg_Name,
-                        Sup_ID = input.Sup_ID,
-                        Descr = input.Descr
-                    },
+                res = db.Query<string>("sp_AddNewOrdItem", new
+                {
+                    OrdTtl_Id = input.OrdTtl_Id,
+                    OI_No = input.OI_No,
+                    Ctlg_No = input.Ctlg_No,
+                    Qty = input.Qty,
+                    Ctlg_Name = input.Ctlg_Name,
+                    Sup_ID = input.Sup_ID,
+                    Descr = input.Descr
+                },
                     commandType: CommandType.StoredProcedure).FirstOrDefault();
             }
-            if (res != "1")       
+            if (res != "1")
                 return false;
-            return true;    
+            return true;
         }
 
         /* Для изменения количества по позициям, чтобы обезопасить себя от отключения от канала 
@@ -229,14 +330,15 @@ namespace GolovinskyAPI.Infrastructure
             bool res;
             using (IDbConnection db = new SqlConnection(connection))
             {
-                res = db.Query<bool>("sp_ChangeQty", new { 
-                        Ord_ID= input.OrdTtl_Id,  
-                        OI_No = input.OI_No,
-                        NewQty = input.Qty,
-                    },
+                res = db.Query<bool>("sp_ChangeQty", new
+                {
+                    Ord_ID = input.OrdTtl_Id,
+                    OI_No = input.OI_No,
+                    NewQty = input.Qty,
+                },
                     commandType: CommandType.StoredProcedure).FirstOrDefault();
             }
-            return res;    
+            return res;
         }
 
         public bool SaveOrder(NewOrderShippingInputModel input)
@@ -247,9 +349,46 @@ namespace GolovinskyAPI.Infrastructure
                 res = db.Query<string>("sp_OrderAsSMS", input,
                     commandType: CommandType.StoredProcedure).FirstOrDefault();
             }
-            if (res.Length == 0)       
+            if (res.Length == 0)
                 return false;
             return true;
+        }
+
+
+        public CustomerInfoPromoOutputModel CustomerInfoPromo(int? cust_id)
+        {
+            CustomerInfoPromoOutputModel result;
+            using (SqlConnection db = new SqlConnection(connection))
+            {
+                result = db.Query<CustomerInfoPromoOutputModel>("sp_GetCustomerInfoPromo", new { Cust_ID = cust_id }, commandType: CommandType.StoredProcedure).FirstOrDefault();
+            }
+            return result;
+        }
+
+        public CustomerInfoOutput GetCustomerFIO(int CustID)
+        {
+            CustomerInfoOutput res = new CustomerInfoOutput();
+            using (SqlConnection db = new SqlConnection(connection))
+            {
+                res = db.Query<CustomerInfoOutput>("sp_GetCustomerInfo", new { Cust_ID = CustID }, commandType: CommandType.StoredProcedure).FirstOrDefault();
+            }
+            return res;
+        }
+
+
+        // потм куда нибудь вынести
+        private void Each<T>(IEnumerable<T> items, Action<T> action)
+        {
+            foreach (var item in items)
+            {
+                action(item);
+            }
+        }
+
+        private void ConvertCategoriesToArr(SearchPictureOutputModel item)
+        {
+            item.IdCategories = item.idcrumbs.Split(';').ToList();
+            item.NameCategories = item.txtcrumbs.Split(';').ToList();
         }
     }
 }

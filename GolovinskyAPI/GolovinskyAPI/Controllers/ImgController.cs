@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using GolovinskyAPI.Infrastructure;
 using GolovinskyAPI.Models;
+using GolovinskyAPI.Models.ViewModels.Images;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +13,7 @@ namespace GolovinskyAPI.Controllers
 {
     //[Produces("application/json")]
     [Route("api/Img")]
+    [DisableRequestSizeLimit]
     public class ImgController : ControllerBase
     {
 
@@ -48,21 +51,46 @@ namespace GolovinskyAPI.Controllers
             }
             else
             {
-                return Ok(repo.SearchPictureInfo(model));
+                var res = repo.SearchPictureInfo(model);
+                if(res != null)
+                {
+                    return Ok(res);
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
-                  
+          
         }
 
-        // PUT: api/Img/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        /// <summary>
+        /// Добавление картинки
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("/api/img/upload")]
+        //[Authorize]
+        public IActionResult Upload([FromForm] NewUploadImageInput model)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("параметры запроса некорректные");
+            }
+            bool res = repo.UploadPicture(model);
+            return Ok(new { result =  res });
         }
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("/api/img/")]
+        //[Authorize]
+        public IActionResult Delete([FromBody] SearchPictureInfoInputModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("параметры запроса некорректные");
+            }
+            bool res = repo.DeleteMainPicture(model);
+            return Ok(new { result = res });
         }
     }
 }

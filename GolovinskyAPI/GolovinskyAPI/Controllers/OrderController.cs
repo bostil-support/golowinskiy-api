@@ -11,6 +11,10 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace GolovinskyAPI.Controllers
 {
+    /// <summary>
+    /// Все что связано с оформлением заказа
+    /// </summary>
+    /// <returns></returns>
     [Produces("application/json")]
     [Route("api/order")]
     public class OrderController : ControllerBase
@@ -26,6 +30,11 @@ namespace GolovinskyAPI.Controllers
          Для этого используется процедура
         [dbo].[sp_AddNewOrder]
         */
+        /// <summary>
+        /// Создание заказа при добавлении первого товара
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         // POST: api/Order
         [HttpPost]
         public IActionResult Post([FromBody]NewOrderInputModel model)
@@ -43,6 +52,11 @@ namespace GolovinskyAPI.Controllers
             return Ok(res);
         }
 
+        /// <summary>
+        /// Добавление товара в корзину
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("/api/addtocart/")]
         public IActionResult AddToCart([FromBody] NewOrderItemInputModel model)
         {
@@ -60,8 +74,15 @@ namespace GolovinskyAPI.Controllers
                 return Ok(new { Message = "Не верные параметры. Товар не добавлне в корзину.", Result = false });
             }
         }
-
+        
+        // изменить количество единиц в корзине
+        /// <summary>
+        /// Изменить количество единиц в корзине
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("/api/order/changeqty/")]
+        [Authorize]
         public IActionResult ChangeQty([FromBody] NewOrderItemInputModel model)
         {
             bool res;
@@ -70,17 +91,20 @@ namespace GolovinskyAPI.Controllers
                 return BadRequest();
             }
             res = repo.ChangeQty(model);
-            if (!res)
-            {
-                return Ok(new { Result = false });
-            }
-            return Ok(new { Result = true });
+            
+            return Ok(new { Result = res });
         }
 
-        
+
         /* В самом конце формирования заказа запускается процедура
           [dbo].[sp_OrderAsSMS], где пользователь в форме указывает адрес доставки 
         */
+        /// <summary>
+        /// Сохранение товара
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [Authorize]
         [HttpPost("/api/order/save/")]
         public IActionResult SaveOrder([FromBody] NewOrderShippingInputModel model)
         {

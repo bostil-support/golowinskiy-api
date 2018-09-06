@@ -36,9 +36,15 @@ namespace GolovinskyAPI.Controllers
                 return BadRequest();
             return Ok(repo.SearchAvitoPicture(model));
         }
+
+        /// <summary>
+        /// Получение категорий магазина
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         //POST: api/categories
         [HttpPost("/api/categories/")]
-        public IActionResult GetCategories([FromBody] SearchAvitoPictureInput model)
+        public IActionResult GetCategories([FromBody] CategoriesInput model)
         {
             if (!ModelState.IsValid)
                 return BadRequest();

@@ -7,8 +7,11 @@ namespace GolovinskyAPI.Models
 {
     public class LoginSuccessModel
     {
-        public int Result { get; set; }
-        public bool IsItBoss { get; set; }
-        public string Message { get; set; }
+        public string AccessToken { get; set; }
+        public string UserName { get; set; }
+        public string Role { get; set; }
+        public string UserId { get; set; }
+        public string FIO { get; set; }
+        public string Phone { get; set; }
     }
 }

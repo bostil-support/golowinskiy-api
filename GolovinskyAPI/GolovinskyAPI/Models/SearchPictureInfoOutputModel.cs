@@ -23,6 +23,15 @@ namespace GolovinskyAPI.Models
         public string v_isnoprice { get; set; }
         public string isprice { get; set; }
         public string youtube { get; set; }
+        public int Prc_ID { get; set; }
+        public string prc_Br { get; set; }
+        public string t_imageprev { get; set; }
         public List<Image> AdditionalImages { get; set; }
+        
+        public SearchPictureInfoOutputModel()
+        {
+            AdditionalImages = new List<Image>();
+        }
+
     }
 }

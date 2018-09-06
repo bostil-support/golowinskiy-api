@@ -10,6 +10,9 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.Extensions.Options;
+using GolovinskyAPI.Services;
 
 namespace GolovinskyAPI.Controllers
 {
@@ -18,92 +21,72 @@ namespace GolovinskyAPI.Controllers
     public class AuthorizationController : ControllerBase
     {
         IRepository repo;
-        public AuthorizationController(IRepository r)
+        private readonly IOptions<AuthServiceModel> _options;
+        public AuthorizationController(IRepository r, IOptions<AuthServiceModel> options)
         {
+            _options = options;
             repo = r;
         }
-        // GET: api/Authorization/5
-        [HttpGet]
-        public string Get(int id)
-        {
-            return "value";
-        }
-        
+                
         // POST: api/Authorization
         [HttpPost]
-        public async Task Post([FromBody] LoginModel model)
+        public async Task<IActionResult> Post([FromBody] LoginModel model)
         {
             if (!ModelState.IsValid)
             {
-                Response.StatusCode = 400;
-                await Response.WriteAsync("Некорректные данные в запросе");
-                return;
-                //return BadRequest();
+                //Response.StatusCode = 400;
+                //await Response.WriteAsync("Некорректные данные в запросе");
+                //return;
+                return BadRequest("Некорректные данные в запросе");
             }
 
             var identity = GetIdentity(model);
             if (identity == null)
             {
-                Response.StatusCode = 400;
-                await Response.WriteAsync("Не верный логин и пароль");
-                return;
+                //Response.StatusCode = 400;
+                //await Response.WriteAsync("Не верный логин и пароль");
+                return NotFound(new { result = false, message = "Не верный логин и пароль" });
             }
             var now = DateTime.UtcNow;
+
+            var custInfo = repo.GetCustomerFIO(Convert.ToInt32(identity.Claims.ElementAt(2).Value));
+            string fio = null;
+            if(custInfo!= null) fio = custInfo.FIO;
+            
             var jwt = new JwtSecurityToken(
-                issuer: AuthOptions.ISSUER,
-                audience: AuthOptions.AUDIENCE,
+                issuer: _options.Value.Issuer,
+                audience: GetAUDIENCE(),
                 notBefore: now,
                 claims: identity.Claims,
-                expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+                expires: now.Add(TimeSpan.FromMinutes(_options.Value.LifeTime)),
+                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(_options), SecurityAlgorithms.HmacSha256));
             
             var endcodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-            var response = new 
+            var response = new LoginSuccessModel
             {
-                access_token = endcodedJwt,
-                username = identity.Name,
-                role = identity.Claims.ElementAt(1).Value,
-                user_id = identity.Claims.ElementAt(2).Value
+                AccessToken = endcodedJwt,
+                UserName = identity.Name,
+                FIO = fio,
+                Phone = custInfo.Phone,
+                Role = identity.Claims.ElementAt(1).Value,
+                UserId = identity.Claims.ElementAt(2).Value
             };
 
-            Response.ContentType = "application/json";
+            /* Response.ContentType = "application/json";
             await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings 
             {
                 Formatting = Formatting.Indented 
-            }));
-            //else
-            //{
-
-                /* var res = repo.CheckWebPassword(model);
-                if (res == 0)
-                {
-                    return Ok(new LoginSuccessModel
-                    {
-                        Result = res,
-                        IsItBoss = false,
-                        Message = "Авторизация не пройдена"
-                    });
-                }
-                else if(res == model.Cust_ID_Main)
-                {
-                    return Ok(new LoginSuccessModel {
-                        Result = res,
-                        IsItBoss = true,
-                        Message = "Вход осуществлен хозяином портала"
-                    });
-                }
-                else
-                {
-                    return Ok(new LoginSuccessModel
-                    {
-                        Result = res,
-                        IsItBoss = false,
-                        Message = "Вход осуществлен пользователем портала"
-                    });
-                } */                
-            //}             
+            })); */
+            return Ok(response);
         }
         
+        [NonAction]
+        public string GetAUDIENCE()
+        {
+            var f = Request.GetDisplayUrl();
+            return f;
+        }
+
         // PUT: api/Authorization
         [HttpPut]
         public IActionResult Put([FromBody]RegisterInputModel model)

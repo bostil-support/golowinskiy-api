@@ -4,6 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using GolovinskyAPI.Models.ViewModels.CustomerInfo;
+using GolovinskyAPI.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GolovinskyAPI.Controllers
 {
@@ -11,11 +14,23 @@ namespace GolovinskyAPI.Controllers
     [Route("api/UserInfo")]
     public class UserInfoController : ControllerBase
     {
-        // GET: api/UserInfo/5
-        [HttpGet]
-        public string Get(int id)
+        IRepository repo;
+        public UserInfoController(IRepository r)
         {
-            return "value";
+            repo = r;
+        }
+
+        // GET: api/UserInfo/5
+        [HttpGet("{id}", Name = "UserInfo")]
+        [Authorize]
+        public IActionResult Get(int? id)
+        {
+            if (id == null)
+            {
+                return BadRequest("id пользователя не задан");
+            }
+
+            return Ok(repo.CustomerInfoPromo(id));
         }
     }
 }

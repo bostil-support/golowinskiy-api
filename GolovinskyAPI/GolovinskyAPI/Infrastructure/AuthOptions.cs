@@ -1,4 +1,6 @@
 using System.Text;
+using GolovinskyAPI.Services;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 
@@ -6,14 +8,24 @@ namespace GolovinskyAPI.Infrastructure
 {
     public class AuthOptions
     {
-        public const string ISSUER = "http://91.92.136.144/";
-        public const string AUDIENCE = "http://golowinskiy.bostil.ru";
-        public const int LIFETIME = 1;
-        const string KEY = "mysupersecret_secretkey!123";
-        
-        public static SymmetricSecurityKey GetSymmetricSecurityKey()
+        public string ISSUER { get; set; }
+        public string AUDIENCE { get; set; }
+        public int LIFETIME { get; set; }
+        public string KEY {get;set;}
+        public SymmetricSecurityKey key { get; set; }
+
+        public AuthOptions(IOptions<AuthServiceModel> options)
         {
-            return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(KEY));
+            ISSUER = options.Value.Issuer;
+            AUDIENCE = options.Value.Audience;
+            LIFETIME = options.Value.LifeTime;
+            KEY = options.Value.Key;
         }
+
+
+    public static SymmetricSecurityKey GetSymmetricSecurityKey(IOptions<AuthServiceModel> options)
+    {
+        return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(options.Value.Key));
     }
 }
+}/*http://golowinskiy.bostil.ru*/

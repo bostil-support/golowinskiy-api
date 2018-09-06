@@ -11,5 +11,7 @@ namespace GolovinskyAPI.Models
         [Required]
         [EmailAddress]
         public string EMail { get; set; }
+        [Required]
+        public string Cust_ID_Main { get; set; }
     }
 }
