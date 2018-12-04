@@ -11,6 +11,6 @@ namespace GolovinskyAPI.Models
         public int Cust_ID { get; set; }
         public string AppCode { get; set; }
         // параметр, который должен будет передаваться при работе Системы частных объявлений
-        public int CID { get; set; }
+        //public int CID { get; set; } //не нужен(необязательное поле)
     }
 }

@@ -19,6 +19,11 @@ namespace GolovinskyAPI.Controllers
             repo = r;
         }
 
+        /// <summary>
+        /// Отображение информации о магазине
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
         [HttpGet("{url}")]
         public IActionResult Get(string url)
         {

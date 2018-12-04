@@ -20,6 +20,11 @@ namespace GolovinskyAPI.Controllers
             repo = r;
         }
 
+        /// <summary>
+        /// Отображение данных клиента
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET: api/UserInfo/5
         [HttpGet("{id}", Name = "UserInfo")]
         [Authorize]

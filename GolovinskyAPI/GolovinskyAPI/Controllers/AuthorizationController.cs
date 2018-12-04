@@ -16,6 +16,10 @@ using GolovinskyAPI.Services;
 
 namespace GolovinskyAPI.Controllers
 {
+    /// <summary>
+    /// Авторизация
+    /// </summary>
+    /// <returns></returns>
     [Produces("application/json")]
     [Route("api/Authorization")]
     public class AuthorizationController : ControllerBase
@@ -27,8 +31,13 @@ namespace GolovinskyAPI.Controllers
             _options = options;
             repo = r;
         }
-                
+
         // POST: api/Authorization
+        /// <summary>
+        /// Авторизация пользователя
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] LoginModel model)
         {
@@ -58,7 +67,8 @@ namespace GolovinskyAPI.Controllers
                 audience: GetAUDIENCE(),
                 notBefore: now,
                 claims: identity.Claims,
-                expires: now.Add(TimeSpan.FromMinutes(_options.Value.LifeTime)),
+              //  expires: now.Add(TimeSpan.FromMinutes(_options.Value.LifeTime)),
+                expires: now.AddMonths(1),
                 signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(_options), SecurityAlgorithms.HmacSha256));
             
             var endcodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
@@ -88,6 +98,11 @@ namespace GolovinskyAPI.Controllers
         }
 
         // PUT: api/Authorization
+        /// <summary>
+        /// Регистрация
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut]
         public IActionResult Put([FromBody]RegisterInputModel model)
         {

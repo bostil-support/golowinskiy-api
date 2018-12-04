@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using GolovinskyAPI.Models.ShopInfo;
+using System.Drawing;
 
 namespace GolovinskyAPI.Infrastructure
 {
@@ -107,18 +108,21 @@ namespace GolovinskyAPI.Infrastructure
         // добавление картинки в базу
         public bool UploadPicture(NewUploadImageInput input)
         {
+            Bitmap bmp = new Bitmap(input.Img, 720, 360);
             byte[] fileBytes;
-            using (var fileStream = input.Img.OpenReadStream())
+            //using (var fileStream = input.Img.OpenReadStream())
             using (var ms = new MemoryStream())
             {
-                fileStream.CopyTo(ms);
+                input.Img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
                 fileBytes = ms.ToArray();
+                //fileStream.CopyTo(ms);
+                //fileBytes = ms.ToArray();
             }
             var result = new NewUploadImageInput2
             {
                 AppCode = input.AppCode,
                 TImageprev = input.TImageprev,
-                Img = fileBytes 
+                Img = fileBytes
             };
             string resObj;
             using (dbConnection)
@@ -202,14 +206,14 @@ namespace GolovinskyAPI.Infrastructure
         }
 
         // Показ дополнительных картинок
-        private List<Image> GetAllAdditionalPictures(SearchPictureInfoInputModel input)
+        private List<Models.Entities.Image> GetAllAdditionalPictures(SearchPictureInfoInputModel input)
         {
-            List<Image> list = new List<Image>();
+            List<Models.Entities.Image> list = new List<Models.Entities.Image>();
 
             using (IDbConnection db = new SqlConnection(connection))
             {
                 //search additional images
-                list = db.Query<Image>("sp_SearchGetAvitoAddImage", new { Prc_ID = input.Prc_ID, Cust_ID = input.Cust_ID, AppCode = input.AppCode },
+                list = db.Query<Models.Entities.Image>("sp_SearchGetAvitoAddImage", new { Prc_ID = input.Prc_ID, Cust_ID = input.Cust_ID, AppCode = input.AppCode },
                     commandType: CommandType.StoredProcedure).ToList();
             }
 

@@ -82,7 +82,6 @@ namespace GolovinskyAPI.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("/api/order/changeqty/")]
-        [Authorize]
         public IActionResult ChangeQty([FromBody] NewOrderItemInputModel model)
         {
             bool res;

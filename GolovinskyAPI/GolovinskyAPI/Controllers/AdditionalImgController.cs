@@ -20,6 +20,11 @@ namespace GolovinskyAPI.Controllers
             repo = r;
         }
 
+        /// <summary>
+        /// Добавление дополнительной картинки
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         // POST: api/AdditionalImg
         [HttpPost]
         [Authorize]
@@ -31,7 +36,12 @@ namespace GolovinskyAPI.Controllers
             }
             return Ok(repo.InsertAdditionalPictureToProduct(model));
         }
-        
+
+        /// <summary>
+        /// Изменение дополнительной картинки
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         // PUT: api/AdditionalImg/
         [HttpPut("api/AdditionalImg/")]
         public IActionResult Put([FromBody] NewAdditionalPictureInputModel model)
@@ -43,6 +53,11 @@ namespace GolovinskyAPI.Controllers
             return Ok(repo.UpdateAdditionalPictureToProduct(model));
         }
 
+        /// <summary>
+        /// Удаление дополнительной картикни
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         // DELETE: api/AdditionalImg/
         [HttpDelete("api/AdditionalImg/")]
         public IActionResult Delete([FromBody] NewAdditionalPictureInputModel model)

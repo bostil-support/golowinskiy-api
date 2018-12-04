@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace GolovinskyAPI.Models.ViewModels.Images
 {
@@ -13,7 +14,7 @@ namespace GolovinskyAPI.Models.ViewModels.Images
         // наименование картинки
         public string TImageprev { get; set; }
         // сама картинка
-        public  IFormFile Img { get; set; }
+        public  Image Img { get; set; }
     }
 
     public class NewUploadImageInput2

@@ -18,6 +18,12 @@ namespace GolovinskyAPI.Controllers
         {
             repo = r;
         }
+
+        /// <summary>
+        /// Отобразить изображение?
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         // POST: api/SearchPicture
         [HttpPost]
         public IActionResult Post([FromBody] SearchPictureInputModel model)

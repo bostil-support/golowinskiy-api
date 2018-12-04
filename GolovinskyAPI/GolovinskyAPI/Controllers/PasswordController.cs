@@ -24,6 +24,11 @@ namespace GolovinskyAPI.Controllers
             repo = r;
         }
         // GET: api/password
+        /// <summary>
+        /// Восстановление пароля и отправка его на email
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] PasswordRecoveryInput model)
         {

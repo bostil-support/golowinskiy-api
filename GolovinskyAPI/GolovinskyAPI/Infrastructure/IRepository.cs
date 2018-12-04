@@ -7,7 +7,6 @@ using GolovinskyAPI.Models.Orders;
 using GolovinskyAPI.Models.ViewModels.Categories;
 using GolovinskyAPI.Models.ViewModels.CustomerInfo;
 using GolovinskyAPI.Models.ViewModels.Images;
-using Microsoft.AspNetCore.Server.Kestrel.Internal.System.Collections.Sequences;
 using GolovinskyAPI.Models.ShopInfo;
 
 namespace GolovinskyAPI.Infrastructure

@@ -20,14 +20,18 @@ namespace GolovinskyAPI.Models
         public string Code_1C { get; set; }
         public string Qty { get; set; }
         public string Delivery { get; set; }
+        public string phoneclient { get; set; }
         public string v_isnoprice { get; set; }
         public string isprice { get; set; }
         public string youtube { get; set; }
+        public string latitude { get; set; }
+        public string longitude { get; set; }
+        public string addr { get; set; }
         public int Prc_ID { get; set; }
         public string prc_Br { get; set; }
         public string t_imageprev { get; set; }
         public List<Image> AdditionalImages { get; set; }
-        
+
         public SearchPictureInfoOutputModel()
         {
             AdditionalImages = new List<Image>();

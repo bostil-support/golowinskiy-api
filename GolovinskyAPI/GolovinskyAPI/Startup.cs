@@ -4,6 +4,7 @@ using GolovinskyAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -31,6 +32,7 @@ namespace GolovinskyAPI
             services.AddTransient<IRepository, Repository>(provider => new Repository(connection));
             services.AddTransient<IProductRepository, ProductRepository>(provider => new ProductRepository(connection));
             services.AddOptions();
+            services.AddMvc();
 
             services.Configure<AuthServiceModel>(Configuration.GetSection("AuthService"));
             var result = Configuration.GetSection("AuthService").GetChildren();
@@ -41,8 +43,7 @@ namespace GolovinskyAPI
                 c.IncludeXmlComments(xmlPath);
             }
             );
-            
-            services.AddMvc();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -77,7 +78,8 @@ namespace GolovinskyAPI
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseMvc();
-
+            
+            
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

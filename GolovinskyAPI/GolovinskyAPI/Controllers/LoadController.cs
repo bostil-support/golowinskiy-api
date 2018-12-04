@@ -20,6 +20,12 @@ namespace GolovinskyAPI.Controllers
             repo = r;
         }
 
+
+        /// <summary>
+        /// Переход в конкретный магазин
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET: api/Load/5
         [HttpGet("{id}")]
         public IActionResult Get(int id)
@@ -34,6 +40,9 @@ namespace GolovinskyAPI.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
+            //string route = "http://" + model.Id.ToString() + "." + "golowinskiy.bostil.ru/";
+            //Console.WriteLine(route);
+            //return Redirect(route);
             return Ok(repo.SearchAvitoPicture(model));
         }
 

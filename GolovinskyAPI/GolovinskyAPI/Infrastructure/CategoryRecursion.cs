@@ -7,7 +7,6 @@ using GolovinskyAPI.Models.ViewModels.Categories;
 using System.Data;
 using System.Data.SqlClient;
 using Dapper;
-using Microsoft.AspNetCore.Server.Kestrel.Internal.System.Collections.Sequences;
 
 namespace GolovinskyAPI.Infrastructure
 {

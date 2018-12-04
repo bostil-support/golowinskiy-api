@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using System;
+using System.Net;
 
 namespace GolovinskyAPI
 {
@@ -13,10 +14,10 @@ namespace GolovinskyAPI
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-            //.UseKestrel(o =>
-            //{
-            //    o.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(30);
-            //})
+             //.UseKestrel(o =>
+             //{
+             //    o.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(30);
+             //})
             .UseIISIntegration()
             .UseStartup<Startup>()
                 .Build();

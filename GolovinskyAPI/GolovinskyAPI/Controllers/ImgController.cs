@@ -11,6 +11,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GolovinskyAPI.Controllers
 {
+    /// <summary>
+    /// Контроллер для работы с картинками
+    /// </summary>
+    /// <returns></returns>
     //[Produces("application/json")]
     [Route("api/Img")]
     [DisableRequestSizeLimit]
@@ -22,9 +26,12 @@ namespace GolovinskyAPI.Controllers
         {
             repo = r;
         }
+
+        /// <summary>
+        /// Отобразить картинку
+        /// </summary>
         // GET: api/Img/5
         [HttpGet]
-        ///
         public IActionResult Get(string AppCode, string ImgFileName)
         {
             var res = repo.GetImageMobile(AppCode, ImgFileName);
@@ -40,7 +47,11 @@ namespace GolovinskyAPI.Controllers
             
         }
 
-
+        /// <summary>
+        /// Добавление картинки
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         // POST: api/Img
         [HttpPost]
         public IActionResult Post([FromBody] SearchPictureInfoInputModel model)
@@ -52,7 +63,7 @@ namespace GolovinskyAPI.Controllers
             else
             {
                 var res = repo.SearchPictureInfo(model);
-                if(res != null)
+                if (res != null)
                 {
                     return Ok(res);
                 }
@@ -61,11 +72,10 @@ namespace GolovinskyAPI.Controllers
                     return BadRequest();
                 }
             }
-          
         }
 
         /// <summary>
-        /// Добавление картинки
+        /// Изменение картинки
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -81,6 +91,11 @@ namespace GolovinskyAPI.Controllers
             return Ok(new { result =  res });
         }
 
+        /// <summary>
+        /// Удаление картинки
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpDelete("/api/img/")]
         //[Authorize]
         public IActionResult Delete([FromBody] SearchPictureInfoInputModel model)
