@@ -14,7 +14,7 @@ namespace GolovinskyAPI.Models.ViewModels.Images
         // наименование картинки
         public string TImageprev { get; set; }
         // сама картинка
-        public  Image Img { get; set; }
+        public  IFormFile Img { get; set; }
     }
 
     public class NewUploadImageInput2

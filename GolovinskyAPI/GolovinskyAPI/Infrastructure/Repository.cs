@@ -108,29 +108,36 @@ namespace GolovinskyAPI.Infrastructure
         // добавление картинки в базу
         public bool UploadPicture(NewUploadImageInput input)
         {
-            Bitmap bmp = new Bitmap(input.Img, 720, 360);
-            byte[] fileBytes;
-            //using (var fileStream = input.Img.OpenReadStream())
-            using (var ms = new MemoryStream())
+            try
             {
-                input.Img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                fileBytes = ms.ToArray();
-                //fileStream.CopyTo(ms);
-                //fileBytes = ms.ToArray();
+                System.Drawing.Image image = System.Drawing.Image.FromStream(input.Img.OpenReadStream(), true, true);
+                Bitmap bmp = new Bitmap(image, 720, 360);
+                byte[] fileBytes;
+                using (var ms = new MemoryStream())
+                {
+                    bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                    fileBytes = ms.ToArray();
+                    //input.Img.CopyTo(ms);
+                    //fileBytes = ms.ToArray();
+                }
+                var result = new NewUploadImageInput2
+                {
+                    AppCode = input.AppCode,
+                    TImageprev = input.Img.FileName,
+                    Img = fileBytes
+                };
+                string resObj;
+                using (dbConnection)
+                {
+                    resObj = dbConnection.Query<string>("sp_UploadMobileDBPictAll", result,
+                        commandType: CommandType.StoredProcedure).First();
+                }
+                return (resObj == "1");
             }
-            var result = new NewUploadImageInput2
+            catch(Exception e)
             {
-                AppCode = input.AppCode,
-                TImageprev = input.TImageprev,
-                Img = fileBytes
-            };
-            string resObj;
-            using (dbConnection)
-            {
-                resObj = dbConnection.Query<string>("sp_UploadMobileDBPictAll", result,
-                    commandType: CommandType.StoredProcedure).First();
+                return false;
             }
-            return (resObj == "1");
         }
 
         // добавление дополнительной картинки к товару или объявлению

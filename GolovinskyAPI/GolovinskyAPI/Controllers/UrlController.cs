@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.Extensions;
 using GolovinskyAPI.Infrastructure;
 using GolovinskyAPI.Models.ShopInfo;
+using GolovinskyAPI.Services;
 
 namespace GolovinskyAPI.Controllers
 {
@@ -27,12 +28,15 @@ namespace GolovinskyAPI.Controllers
         [HttpGet("{url}")]
         public IActionResult Get(string url)
         {
+            var customizeService = new CustomizeService();
+            string mainImage = customizeService.GetMainImage();
             ShopInfo res = repo.GetSubDomain(url);
             if (res == null)
             {
                 return Ok(new { Message = "Не верный поддомен магазина", Status = false });
             }
-            return Ok(new { cust_id = res.cust_id });
+            res.MainPicture = $"/mainimages/{mainImage}";
+            return Ok(new { cust_id = res.cust_id, mainImage = res.MainPicture });
         }
     }
 }
