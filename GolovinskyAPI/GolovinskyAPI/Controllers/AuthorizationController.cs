@@ -43,17 +43,12 @@ namespace GolovinskyAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                //Response.StatusCode = 400;
-                //await Response.WriteAsync("Некорректные данные в запросе");
-                //return;
                 return BadRequest("Некорректные данные в запросе");
             }
 
             var identity = GetIdentity(model);
             if (identity == null)
             {
-                //Response.StatusCode = 400;
-                //await Response.WriteAsync("Не верный логин и пароль");
                 return NotFound(new { result = false, message = "Не верный логин и пароль" });
             }
             var now = DateTime.UtcNow;
@@ -82,11 +77,10 @@ namespace GolovinskyAPI.Controllers
                 UserId = identity.Claims.ElementAt(2).Value
             };
 
-            /* Response.ContentType = "application/json";
-            await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings 
-            {
-                Formatting = Formatting.Indented 
-            })); */
+            var customizeService = new CustomizeService();
+            var mainImage = customizeService.GetMainImage();
+            response.MainImage = mainImage;
+
             return Ok(response);
         }
         

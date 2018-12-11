@@ -250,7 +250,7 @@ namespace GolovinskyAPI.Infrastructure
             string res;
             using (IDbConnection db = new SqlConnection(connection))
             {
-                res = db.Query<string>("sp_RecoveryPassword", new { E_mail = input.EMail },
+                res = db.Query<string>("sp_RecoveryPassword", new { E_mail = input.EMail, Cust_ID_Main = input.Cust_ID_Main },
                                 commandType: CommandType.StoredProcedure).FirstOrDefault();
             }
             return res;

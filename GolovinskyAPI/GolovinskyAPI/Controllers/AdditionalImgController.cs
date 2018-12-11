@@ -10,6 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GolovinskyAPI.Controllers
 {
+    /// <summary>
+    /// Дополнительная картинка к товару
+    /// </summary>
+    /// <returns></returns>
     [Produces("application/json")]
     [Route("api/AdditionalImg")]
     public class AdditionalImgController : ControllerBase

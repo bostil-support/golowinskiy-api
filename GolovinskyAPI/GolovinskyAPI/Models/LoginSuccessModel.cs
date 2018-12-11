@@ -13,5 +13,7 @@ namespace GolovinskyAPI.Models
         public string UserId { get; set; }
         public string FIO { get; set; }
         public string Phone { get; set; }
+        // фон сайта для пользователя
+        public string MainImage { get; set; }
     }
 }
