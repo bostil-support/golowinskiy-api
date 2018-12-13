@@ -9,7 +9,7 @@ namespace GolovinskyAPI.Infrastructure
 {
     public interface IProductRepository
     {
-        bool InsertProduct(NewProductInputModel input);
+        NewProductOutputModel InsertProduct(NewProductInputModel input);
         bool UpdateProduct(NewProductInputModel input);
         bool DeleteProduct(DeleteProductInputModel input);
         List<SearchPictureOutputModel> SearchProduct(SearchPictureInputModel input);

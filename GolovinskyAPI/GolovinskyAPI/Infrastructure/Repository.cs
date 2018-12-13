@@ -123,7 +123,7 @@ namespace GolovinskyAPI.Infrastructure
                 var result = new NewUploadImageInput2
                 {
                     AppCode = input.AppCode,
-                    TImageprev = input.Img.FileName,
+                    TImageprev = input.TImageprev,
                     Img = fileBytes
                 };
                 string resObj;
