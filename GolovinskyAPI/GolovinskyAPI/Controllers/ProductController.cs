@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using GolovinskyAPI.Infrastructure;
 using GolovinskyAPI.Models.ViewModels.Products;
 using Microsoft.AspNetCore.Authorization;
+using GolovinskyAPI.Models;
 
 namespace GolovinskyAPI.Controllers
 {
@@ -78,5 +79,26 @@ namespace GolovinskyAPI.Controllers
             bool res = repo.DeleteProduct(model);
             return Ok(new { result = res });
         }
+
+
+        
+        /// <summary>
+        /// Отобразить Продукт?
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("/api/product/search/")]
+        public IActionResult Search([FromBody] SearchPictureInputModel model )
+        {
+            if(!ModelState.IsValid)
+            
+                return BadRequest();
+            
+            return Ok(repo.SearchProduct(model));
+        }
+
+
+
+
     }
 }

@@ -84,7 +84,7 @@ namespace GolovinskyAPI.Infrastructure
             var res = new List<SearchPictureOutputModel>();
             using (IDbConnection db = new SqlConnection(connection))
             {
-                // new { SearchDescr = input.SearchDescr, Cust_ID = input.Cust_ID, ID = input.ID }
+               // new { SearchDescr = input.SearchDescr, Cust_ID = input.Cust_ID, ID = input.ID }
                 res = db.Query<SearchPictureOutputModel>("sp_SearchPicture", input, commandType: CommandType.StoredProcedure).ToList();
             }
             Each(res, i => ConvertCategoriesToArr(i) );
