@@ -83,7 +83,7 @@ namespace GolovinskyAPI.Controllers
 
         
         /// <summary>
-        /// Отобразить Продукт?
+        /// Поиск продукта
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
