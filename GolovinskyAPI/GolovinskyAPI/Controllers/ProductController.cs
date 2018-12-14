@@ -38,8 +38,8 @@ namespace GolovinskyAPI.Controllers
                 return BadRequest("Не верные параметры в запросе");
             }
 
-            bool res = repo.InsertProduct(model);
-            return Ok(new { result = res });
+            var res = repo.InsertProduct(model);
+            return Ok(new { result = res.Result, prc_id = res.Prc_ID });
         }
 
         // PUT: api/Product/

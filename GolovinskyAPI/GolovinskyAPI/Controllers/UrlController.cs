@@ -30,13 +30,21 @@ namespace GolovinskyAPI.Controllers
         {
             var customizeService = new CustomizeService();
             string mainImage = customizeService.GetMainImage();
+            string accountMainImage = customizeService.GetMainImageUserAccount();
             ShopInfo res = repo.GetSubDomain(url);
             if (res == null)
             {
-                return Ok(new { Message = "Не верный поддомен магазина", Status = false });
+                return Ok(new { 
+                    Message = "Не верный поддомен магазина", 
+                    MainPicture = $"/mainimages/{mainImage}", 
+                    Status = false });
             }
             res.MainPicture = $"/mainimages/{mainImage}";
-            return Ok(new { cust_id = res.cust_id, mainImage = res.MainPicture });
+            res.MainPictureAccountUser = $"/mainimages/{accountMainImage}";
+            return Ok(new { 
+                cust_id = res.cust_id, 
+                mainImage = res.MainPicture, 
+                mainPictureAccountUser = res.MainPictureAccountUser });
         }
     }
 }

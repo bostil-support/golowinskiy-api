@@ -31,7 +31,7 @@ namespace GolovinskyAPI.Controllers
         /// <returns></returns>
         // POST: api/AdditionalImg
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public IActionResult Post([FromBody] NewAdditionalPictureInputModel model)
         {
             if (!ModelState.IsValid)

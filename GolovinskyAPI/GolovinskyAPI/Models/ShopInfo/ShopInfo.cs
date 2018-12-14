@@ -14,5 +14,6 @@ namespace GolovinskyAPI.Models.ShopInfo
         public bool IsBasketWOPrice { get; set; }
         public bool IsPictureCatalog { get; set; }
         public string MainPicture { get; set; }
+        public string MainPictureAccountUser { get; set; }
     }
 }

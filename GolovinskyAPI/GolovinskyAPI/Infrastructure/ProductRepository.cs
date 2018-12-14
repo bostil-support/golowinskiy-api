@@ -19,17 +19,16 @@ namespace GolovinskyAPI.Infrastructure
         }
 
         // добавление нового товара или частн. объявления
-        public bool InsertProduct(NewProductInputModel model)
+        public NewProductOutputModel InsertProduct(NewProductInputModel model)
         {
-            char res;
+            //char res;
+            NewProductOutputModel res;
             using (IDbConnection db = new SqlConnection(connection))
             {
-                var resObj = db.Query<NewProductOutputModel>("sp_SearchCreateAvito", model,
+                res = db.Query<NewProductOutputModel>("sp_SearchCreateAvito", model,
                              commandType: CommandType.StoredProcedure).First();
-                res = resObj.Result;
             }      
-        
-             return (res == '1');
+            return res;
         }
 
         // редактирование товара или частн. объявления.
@@ -42,8 +41,7 @@ namespace GolovinskyAPI.Infrastructure
                              commandType: CommandType.StoredProcedure).First();
                 res = resObj.Result;
             }
-
-            return (res == '1');
+           return (res == '1');
         }
 
         // удаление товара

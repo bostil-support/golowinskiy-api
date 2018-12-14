@@ -14,6 +14,16 @@ namespace GolovinskyAPI.Services
             var result = image.Substring(image.LastIndexOf('\\') + 1); 
 
             return result;           
+        }
+
+        public string GetMainImageUserAccount(){
+            var directoryFiles = Directory.GetFiles("wwwroot/Images");
+            var random = new Random();
+            int index = random.Next(directoryFiles.Length - 1);
+            string image = directoryFiles[index];
+            var result = image.Substring(image.LastIndexOf('\\') + 1); 
+
+            return result;           
         } 
     }
 }
