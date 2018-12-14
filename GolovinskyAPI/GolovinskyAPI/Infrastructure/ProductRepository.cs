@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Dapper;
 using GolovinskyAPI.Infrastructure;
 using GolovinskyAPI.Models.ViewModels.Products;
+using GolovinskyAPI.Models;
 
 namespace GolovinskyAPI.Infrastructure
 {
@@ -59,10 +60,28 @@ namespace GolovinskyAPI.Infrastructure
 
                 return (res == '1');
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return false;
             }
         }
+        //поиск товара 
+        public List<SearchPictureOutputModel> SearchProduct(SearchPictureInputModel input)
+        {
+            List<SearchPictureOutputModel> response = new List<SearchPictureOutputModel>();
+            using (IDbConnection db = new SqlConnection(connection))
+            {
+                response = db.Query<SearchPictureOutputModel>("sp_SearchPicture", 
+                    new { SearchDescr = input.SearchDescr, Cust_ID = input.Cust_ID },
+                    commandType: CommandType.StoredProcedure).ToList();
+
+            }
+            
+
+            return response;
+        }
+        
+        
+
     }
 }
