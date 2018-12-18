@@ -18,7 +18,7 @@ namespace GolovinskyAPI.Models.ViewModels.Images
         // наименование картинки
         public string TImage { get; set; }
         // id магазина
-        public string Appcode { get; set; }
+        public string Appсode { get; set; }
         // id пользователя, должен будет передаваться при работе Системы частных объявлений
         public int CID { get; set; }
     }

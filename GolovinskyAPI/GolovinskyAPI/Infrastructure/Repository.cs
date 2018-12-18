@@ -194,7 +194,7 @@ namespace GolovinskyAPI.Infrastructure
         }
 
         // удаление дополнительной картинки к товару или объявлению
-        public bool DeleteAdditionalPictureToProduct(NewAdditionalPictureInputModel input)
+        public bool DeleteAdditionalPictureToProduct(DeleteAdditionalInputModel input)
         {
             string resObj;
             using (dbConnection)

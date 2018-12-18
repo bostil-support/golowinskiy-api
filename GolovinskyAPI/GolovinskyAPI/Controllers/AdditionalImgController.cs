@@ -64,13 +64,13 @@ namespace GolovinskyAPI.Controllers
         /// <returns></returns>
         // DELETE: api/AdditionalImg/
         [HttpDelete("api/AdditionalImg/")]
-        public IActionResult Delete([FromBody] NewAdditionalPictureInputModel model)
+        public IActionResult Delete([FromBody] DeleteAdditionalInputModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(new { result = false, message = "Не корректный запрос" });
             }
-            return Ok(repo.DeleteAdditionalPictureToProduct(model));
+            return Ok(new { result = repo.DeleteAdditionalPictureToProduct(model) });
         }
     }
 }

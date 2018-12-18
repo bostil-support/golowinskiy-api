@@ -32,7 +32,7 @@ namespace GolovinskyAPI.Infrastructure
         bool DeleteMainPicture(SearchPictureInfoInputModel input);
         bool InsertAdditionalPictureToProduct(NewAdditionalPictureInputModel input);
         bool UpdateAdditionalPictureToProduct(NewAdditionalPictureInputModel input);
-        bool DeleteAdditionalPictureToProduct(NewAdditionalPictureInputModel input);
+        bool DeleteAdditionalPictureToProduct(DeleteAdditionalInputModel input);
         ShopInfo GetSubDomain(string url);
 
         CustomerInfoOutput GetCustomerFIO(int CustID);
