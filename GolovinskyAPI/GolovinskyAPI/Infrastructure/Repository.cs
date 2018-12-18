@@ -108,31 +108,58 @@ namespace GolovinskyAPI.Infrastructure
         // добавление картинки в базу
         public bool UploadPicture(NewUploadImageInput input)
         {
+            
             try
             {
                 System.Drawing.Image image = System.Drawing.Image.FromStream(input.Img.OpenReadStream(), true, true);
                 Bitmap bmp = new Bitmap(image, 720, 360);
                 byte[] fileBytes;
-                using (var ms = new MemoryStream())
+                if (bmp.Width > 720)
                 {
-                    bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                    fileBytes = ms.ToArray();
-                    //input.Img.CopyTo(ms);
-                    //fileBytes = ms.ToArray();
+                    Bitmap bmp2 = new Bitmap(bmp, new Size(720,bmp.Height));
+                    using (var ms = new MemoryStream())
+                    {
+                        bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                        fileBytes = ms.ToArray();
+                       
+                    }
+                    var result = new NewUploadImageInput2
+                    {
+                        AppCode = input.AppCode,
+                        TImageprev = input.TImageprev,
+                        Img = fileBytes
+                    };
+                    string resObj;
+                    using (dbConnection)
+                    {
+                        resObj = dbConnection.Query<string>("sp_UploadMobileDBPictAll", result,
+                            commandType: CommandType.StoredProcedure).First();
+                    }
+                    return (resObj == "1");
                 }
-                var result = new NewUploadImageInput2
+                else
                 {
-                    AppCode = input.AppCode,
-                    TImageprev = input.TImageprev,
-                    Img = fileBytes
-                };
-                string resObj;
-                using (dbConnection)
-                {
-                    resObj = dbConnection.Query<string>("sp_UploadMobileDBPictAll", result,
-                        commandType: CommandType.StoredProcedure).First();
+                    using (var ms = new MemoryStream())
+                    {
+                        bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                        fileBytes = ms.ToArray();
+                        //input.Img.CopyTo(ms);
+                        //fileBytes = ms.ToArray();
+                    }
+                    var result = new NewUploadImageInput2
+                    {
+                        AppCode = input.AppCode,
+                        TImageprev = input.TImageprev,
+                        Img = fileBytes
+                    };
+                    string resObj;
+                    using (dbConnection)
+                    {
+                        resObj = dbConnection.Query<string>("sp_UploadMobileDBPictAll", result,
+                            commandType: CommandType.StoredProcedure).First();
+                    }
+                    return (resObj == "1");
                 }
-                return (resObj == "1");
             }
             catch(Exception e)
             {
