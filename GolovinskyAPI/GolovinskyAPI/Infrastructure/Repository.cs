@@ -119,7 +119,7 @@ namespace GolovinskyAPI.Infrastructure
                     Bitmap bmp2 = new Bitmap(bmp, new Size(720,bmp.Height));
                     using (var ms = new MemoryStream())
                     {
-                        bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                        bmp2.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
                         fileBytes = ms.ToArray();
                        
                     }
