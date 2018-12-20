@@ -112,9 +112,10 @@ namespace GolovinskyAPI.Infrastructure
             try
             {
                 System.Drawing.Image image = System.Drawing.Image.FromStream(input.Img.OpenReadStream(), true, true);
-                Bitmap bmp = new Bitmap(image, 720, 360);
+                Size s = new Size(image.Width, image.Height);
+                Bitmap bmp = new Bitmap(image,s);
                 byte[] fileBytes;
-                if (bmp.Width > 720)
+                if (image.Width > 720)
                 {
                     Bitmap bmp2 = new Bitmap(bmp, new Size(720,bmp.Height));
                     using (var ms = new MemoryStream())
