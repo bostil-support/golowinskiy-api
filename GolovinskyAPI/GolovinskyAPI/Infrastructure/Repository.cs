@@ -20,6 +20,9 @@ namespace GolovinskyAPI.Infrastructure
 {
     public class Repository : IRepository
     {
+        public float biggestside;
+        public float prop;
+        public int needside;
         string connection = null;
         IDbConnection dbConnection;
         private List<SearchAvitoPictureOutput> categories = new List<SearchAvitoPictureOutput>();
@@ -111,32 +114,116 @@ namespace GolovinskyAPI.Infrastructure
             
             try
             {
+                
                 System.Drawing.Image image = System.Drawing.Image.FromStream(input.Img.OpenReadStream(), true, true);
                 Size s = new Size(image.Width, image.Height);
                 Bitmap bmp = new Bitmap(image,s);
                 byte[] fileBytes;
-                if (image.Width > 720)
+                if(image.Width>image.Height)
                 {
-                    Bitmap bmp2 = new Bitmap(bmp, new Size(720,bmp.Height));
-                    using (var ms = new MemoryStream())
+                    biggestside = image.Width;
+                    prop = biggestside / image.Height;
+                    float newheight = 720 / prop;
+                    needside = Convert.ToInt32(newheight);
+                    if (biggestside > 720)
                     {
-                        bmp2.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                        fileBytes = ms.ToArray();
-                       
+                        
+                        Bitmap bmp2 = new Bitmap(bmp, new Size(720,needside));
+                        using (var ms = new MemoryStream())
+                        {
+                            bmp2.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                            fileBytes = ms.ToArray();
+
+                        }
+                        var result = new NewUploadImageInput2
+                        {
+                            AppCode = input.AppCode,
+                            TImageprev = input.TImageprev,
+                            Img = fileBytes
+                        };
+                        string resObj;
+                        using (dbConnection)
+                        {
+                            resObj = dbConnection.Query<string>("sp_UploadMobileDBPictAll", result,
+                                commandType: CommandType.StoredProcedure).First();
+                        }
+                        return (resObj == "1");
                     }
-                    var result = new NewUploadImageInput2
+                    else
                     {
-                        AppCode = input.AppCode,
-                        TImageprev = input.TImageprev,
-                        Img = fileBytes
-                    };
-                    string resObj;
-                    using (dbConnection)
-                    {
-                        resObj = dbConnection.Query<string>("sp_UploadMobileDBPictAll", result,
-                            commandType: CommandType.StoredProcedure).First();
+                        using (var ms = new MemoryStream())
+                        {
+                            bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                            fileBytes = ms.ToArray();
+
+                        }
+                        var result = new NewUploadImageInput2
+                        {
+                            AppCode = input.AppCode,
+                            TImageprev = input.TImageprev,
+                            Img = fileBytes
+                        };
+                        string resObj;
+                        using (dbConnection)
+                        {
+                            resObj = dbConnection.Query<string>("sp_UploadMobileDBPictAll", result,
+                                commandType: CommandType.StoredProcedure).First();
+                        }
+                        return (resObj == "1");
                     }
-                    return (resObj == "1");
+                }
+                else if (image.Height>image.Width)
+                {
+                    biggestside = image.Height;
+                    prop = biggestside / image.Width;
+                    float newweight = 720 / prop;
+                    needside = Convert.ToInt32(newweight);
+                    if (biggestside > 720)
+                    {
+                        Bitmap bmp2 = new Bitmap(needside,720);
+                        using (var ms = new MemoryStream())
+                        {
+                            bmp2.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                            fileBytes = ms.ToArray();
+
+                        }
+                        var result = new NewUploadImageInput2
+                        {
+                            AppCode = input.AppCode,
+                            TImageprev = input.TImageprev,
+                            Img = fileBytes
+                        };
+                        string resObj;
+                        using (dbConnection)
+                        {
+                            resObj = dbConnection.Query<string>("sp_UploadMobileDBPictAll", result,
+                                commandType: CommandType.StoredProcedure).First();
+                        }
+                        return (resObj == "1");
+                    }
+                    else
+                    {
+                        using (var ms = new MemoryStream())
+                        {
+                            bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                            fileBytes = ms.ToArray();
+
+                        }
+                        var result = new NewUploadImageInput2
+                        {
+                            AppCode = input.AppCode,
+                            TImageprev = input.TImageprev,
+                            Img = fileBytes
+                        };
+                        string resObj;
+                        using (dbConnection)
+                        {
+                            resObj = dbConnection.Query<string>("sp_UploadMobileDBPictAll", result,
+                                commandType: CommandType.StoredProcedure).First();
+                        }
+                        return (resObj == "1");
+                    }
+
                 }
                 else
                 {
@@ -144,8 +231,7 @@ namespace GolovinskyAPI.Infrastructure
                     {
                         bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
                         fileBytes = ms.ToArray();
-                        //input.Img.CopyTo(ms);
-                        //fileBytes = ms.ToArray();
+                        
                     }
                     var result = new NewUploadImageInput2
                     {
