@@ -31,6 +31,8 @@ namespace GolovinskyAPI.Models.ViewModels.Products
         public string PrcNt { get; set; }
         // Это чисто то, что впишет клиент
         public string TransformMech { get; set; }
+        //VidioName
+        public string video { get; set; }
         // id пользователя, параметр, который должен будет передаваться 
         // при работе Системы частных объявлений 
         public int? CID { get; set; }
