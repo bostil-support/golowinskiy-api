@@ -310,7 +310,8 @@ namespace GolovinskyAPI.Infrastructure
 
             using (IDbConnection db = new SqlConnection(connection))
             {
-                res = db.Query<SearchPictureInfoOutputModel>("sp_SearchPictureInfo", new { Prc_ID = input.Prc_ID, Cust_ID = input.Cust_ID, AppCode = input.AppCode },
+                res = db.Query<SearchPictureInfoOutputModel>("sp_SearchPictureInfo", 
+                    new { Prc_ID = input.Prc_ID, Cust_ID = input.Cust_ID, AppCode = input.AppCode },
                              commandType: CommandType.StoredProcedure).FirstOrDefault();
             }
 

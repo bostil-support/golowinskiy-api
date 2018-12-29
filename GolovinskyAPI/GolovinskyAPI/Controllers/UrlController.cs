@@ -28,6 +28,7 @@ namespace GolovinskyAPI.Controllers
         [HttpGet("{url}")]
         public IActionResult Get(string url)
         {
+            
             var customizeService = new CustomizeService();
             string mainImage = customizeService.GetMainImage();
             string accountMainImage = customizeService.GetMainImageUserAccount();
@@ -36,8 +37,9 @@ namespace GolovinskyAPI.Controllers
             {
                 return Ok(new { 
                     Message = "Не верный поддомен магазина", 
-                    MainPicture = $"/mainimages/{mainImage}", 
-                    Status = false });
+                    MainPicture = $"/mainimages/{mainImage}",
+                    MainPictureAccountUser = $"/mainimages/{accountMainImage}",
+                Status = false });
             }
             res.MainPicture = $"/mainimages/{mainImage}";
             res.MainPictureAccountUser = $"/mainimages/{accountMainImage}";

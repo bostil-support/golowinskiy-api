@@ -3,11 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GolovinskyAPI.Models.ViewModels.Products;
 
 namespace GolovinskyAPI.Models
 {
     public class SearchPictureInfoOutputModel
     {
+        
+
         public string Catalog { get; set; }
         public string Ctlg_Name { get; set; }
         public string Ctlg_No { get; set; }
@@ -32,9 +35,11 @@ namespace GolovinskyAPI.Models
         public string t_imageprev { get; set; }
         public List<Image> AdditionalImages { get; set; }
 
+        
         public SearchPictureInfoOutputModel()
         {
             AdditionalImages = new List<Image>();
+            
         }
 
     }
