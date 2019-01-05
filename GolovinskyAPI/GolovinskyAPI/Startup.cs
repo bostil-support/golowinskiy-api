@@ -35,6 +35,8 @@ namespace GolovinskyAPI
             services.AddTransient<IProductRepository, ProductRepository>(provider => new ProductRepository(connection));
             services.AddOptions();
             services.AddMvc();
+            
+            
 
             services.Configure<AuthServiceModel>(Configuration.GetSection("AuthService"));
             var result = Configuration.GetSection("AuthService").GetChildren();

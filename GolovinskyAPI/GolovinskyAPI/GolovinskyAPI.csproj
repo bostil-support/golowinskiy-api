@@ -32,4 +32,8 @@
     <None Include="wwwroot\Images\main3.jpeg" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+
 </Project>

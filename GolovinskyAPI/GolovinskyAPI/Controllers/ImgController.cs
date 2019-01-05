@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GolovinskyAPI.Infrastructure;
 using GolovinskyAPI.Models;
 using GolovinskyAPI.Models.ViewModels.Images;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,8 +24,12 @@ namespace GolovinskyAPI.Controllers
     {
 
         IRepository repo;
+        
+        
+
         public ImgController(IRepository r)
         {
+            
             repo = r;
         }
 
@@ -43,8 +49,8 @@ namespace GolovinskyAPI.Controllers
             else
             {
                 return BadRequest();
-            } 
-            
+            }
+
         }
 
         /// <summary>
@@ -80,7 +86,7 @@ namespace GolovinskyAPI.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("/api/img/upload")]
-        //[Authorize]
+        [Authorize]
         public IActionResult Upload([FromForm] NewUploadImageInput model)
         {
             if (!ModelState.IsValid)
@@ -88,8 +94,10 @@ namespace GolovinskyAPI.Controllers
                 return BadRequest("параметры запроса некорректные");
             }
             bool res = repo.UploadPicture(model);
-            return Ok(new { result =  res });
+            return Ok(new { result = res });
         }
+
+      
 
         /// <summary>
         /// Удаление картинки
@@ -97,7 +105,7 @@ namespace GolovinskyAPI.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpDelete("/api/img/")]
-        //[Authorize]
+        [Authorize]
         public IActionResult Delete([FromBody] SearchPictureInfoInputModel model)
         {
             if (!ModelState.IsValid)
@@ -107,5 +115,7 @@ namespace GolovinskyAPI.Controllers
             bool res = repo.DeleteMainPicture(model);
             return Ok(new { result = res });
         }
+        
     }
 }
+

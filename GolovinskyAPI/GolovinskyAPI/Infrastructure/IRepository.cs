@@ -8,6 +8,7 @@ using GolovinskyAPI.Models.ViewModels.Categories;
 using GolovinskyAPI.Models.ViewModels.CustomerInfo;
 using GolovinskyAPI.Models.ViewModels.Images;
 using GolovinskyAPI.Models.ShopInfo;
+using Microsoft.AspNetCore.Http;
 
 namespace GolovinskyAPI.Infrastructure
 {
@@ -34,6 +35,7 @@ namespace GolovinskyAPI.Infrastructure
         bool UpdateAdditionalPictureToProduct(NewAdditionalPictureInputModel input);
         bool DeleteAdditionalPictureToProduct(DeleteAdditionalInputModel input);
         ShopInfo GetSubDomain(string url);
+        
 
         CustomerInfoOutput GetCustomerFIO(int CustID);
     }

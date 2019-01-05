@@ -15,6 +15,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using GolovinskyAPI.Models.ShopInfo;
 using System.Drawing;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace GolovinskyAPI.Infrastructure
 {
@@ -26,7 +28,7 @@ namespace GolovinskyAPI.Infrastructure
         string connection = null;
         IDbConnection dbConnection;
         private List<SearchAvitoPictureOutput> categories = new List<SearchAvitoPictureOutput>();
-
+        
         public Repository(string conn)
         {
             connection = conn;
@@ -116,9 +118,11 @@ namespace GolovinskyAPI.Infrastructure
             {
                 
                 System.Drawing.Image image = System.Drawing.Image.FromStream(input.Img.OpenReadStream(), true, true);
+                
                 Size s = new Size(image.Width, image.Height);
                 Bitmap bmp = new Bitmap(image,s);
                 byte[] fileBytes;
+                
                 if(image.Width>image.Height)
                 {
                     biggestside = image.Width;
@@ -172,18 +176,20 @@ namespace GolovinskyAPI.Infrastructure
                         return (resObj == "1");
                     }
                 }
+                
                 else if (image.Height>image.Width)
                 {
+                   
                     biggestside = image.Height;
                     prop = biggestside / image.Width;
                     float newweight = 720 / prop;
                     needside = Convert.ToInt32(newweight);
                     if (biggestside > 720)
                     {
-                        Bitmap bmp2 = new Bitmap(needside,720);
+                        Bitmap bmp3 = new Bitmap(bmp, new Size(needside, 720));
                         using (var ms = new MemoryStream())
                         {
-                            bmp2.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                            bmp3.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
                             fileBytes = ms.ToArray();
 
                         }
@@ -199,6 +205,8 @@ namespace GolovinskyAPI.Infrastructure
                             resObj = dbConnection.Query<string>("sp_UploadMobileDBPictAll", result,
                                 commandType: CommandType.StoredProcedure).First();
                         }
+                        
+                       
                         return (resObj == "1");
                     }
                     else
@@ -225,8 +233,9 @@ namespace GolovinskyAPI.Infrastructure
                     }
 
                 }
+                
                 else
-                {
+               {
                     using (var ms = new MemoryStream())
                     {
                         bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
@@ -253,7 +262,7 @@ namespace GolovinskyAPI.Infrastructure
                 return false;
             }
         }
-
+       
         // добавление дополнительной картинки к товару или объявлению
         public bool InsertAdditionalPictureToProduct(NewAdditionalPictureInputModel input)
         {
