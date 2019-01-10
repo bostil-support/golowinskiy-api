@@ -86,7 +86,7 @@ namespace GolovinskyAPI.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("/api/img/upload")]
-        [Authorize]
+        //[Authorize]
         public IActionResult Upload([FromForm] NewUploadImageInput model)
         {
             if (!ModelState.IsValid)

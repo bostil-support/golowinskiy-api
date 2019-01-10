@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\Images\30.12.2018.jpeg" />
+    <None Include="wwwroot\Images\09.01.2019.jpeg" />
     <None Include="wwwroot\Images\main2.jpeg" />
     <None Include="wwwroot\Images\main3.jpeg" />
   </ItemGroup>

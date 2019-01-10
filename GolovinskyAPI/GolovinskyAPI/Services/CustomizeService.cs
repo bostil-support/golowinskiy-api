@@ -14,17 +14,17 @@ namespace GolovinskyAPI.Services
             string date = DateTime.Now.ToString("dd.MM.yyyy");
             string searchresult = prefix + date;
             var directoryFiles = Directory.GetFiles("wwwroot/Images");
-            string imagedate = Array.Find(directoryFiles, s => s.StartsWith(searchresult));
-            if(directoryFiles.Contains(imagedate))
+            string image = Array.Find(directoryFiles, s => s.StartsWith(searchresult));
+            if(directoryFiles.Contains(image))
             {
-                var result = imagedate;
+                var result = image;
                 return result;
             }
             else
             {
                 var random = new Random();
                 int index = random.Next(directoryFiles.Length - 1);
-                string image = directoryFiles[index];
+                image = directoryFiles[index];
                 var result = image.Substring(image.LastIndexOf('\\') + 1);
 
 
@@ -51,17 +51,17 @@ namespace GolovinskyAPI.Services
             string date = DateTime.Now.ToString("dd.MM.yyyy");
             string searchresult = prefix + date;
             var directoryFiles = Directory.GetFiles("wwwroot/AccountImages");
-            string imagedate = Array.Find(directoryFiles, s => s.StartsWith(searchresult));
-            if(directoryFiles.Contains(imagedate))
+            string image = Array.Find(directoryFiles, s => s.StartsWith(searchresult));
+            if(directoryFiles.Contains(image))
             {
-                var result = imagedate;
+                var result = image;
                 return result;
             }
             else
             {
                 var random = new Random();
                 int index = random.Next(directoryFiles.Length - 1);
-                string image = directoryFiles[index];
+                image = directoryFiles[index];
                 var result = image.Substring(image.LastIndexOf('\\') + 1);
 
                 return result;
