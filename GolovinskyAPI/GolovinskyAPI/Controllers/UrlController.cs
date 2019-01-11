@@ -37,8 +37,8 @@ namespace GolovinskyAPI.Controllers
             {
                 return Ok(new { 
                     Message = "Не верный поддомен магазина", 
-                    MainPicture = $"/mainimages/{mainImage}",
-                    MainPictureAccountUser = $"/mainimages/{accountMainImage}",
+                   // MainPicture = $"/mainimages/{mainImage}",
+                   // MainPictureAccountUser = $"/mainimages/{accountMainImage}",
                 Status = false });
             }
             res.MainPicture = $"/mainimages/{mainImage}";

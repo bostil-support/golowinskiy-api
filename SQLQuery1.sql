@@ -18,7 +18,8 @@ go
 Exec sp_SearchUpdateAvito  @Catalog= '19139',@Id='500663',@Ctlg_Name= 'Вет', @TArticle= 'null',@TName= 'product1',@TDescription='null',@TCost= 'null',@TImageprev='3.jpeg',@Appcode='19139',@TypeProd= 'null',@PrcNt='null',@TransformMech= 'null',@video= 'https://www.youtube.com/watch?v=b_aF8enlwVE',@CID = 41609
 go  
   
-  
+Exec sp_UpdateMobileDBfromTxtFiles  @Path='C:\Users\boikochev\Documents\TestUp\'
+go
   
   
   

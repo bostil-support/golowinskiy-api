@@ -31,7 +31,7 @@ namespace GolovinskyAPI.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize]
+       // [Authorize]
         public IActionResult Post([FromBody] NewProductInputModel model)
         {
             if (!ModelState.IsValid)
@@ -50,7 +50,7 @@ namespace GolovinskyAPI.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut]
-        [Authorize]
+        //[Authorize]
         public IActionResult Put([FromBody] NewProductInputModel model)
         {
             if (!ModelState.IsValid)
