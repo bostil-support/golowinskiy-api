@@ -36,7 +36,7 @@ namespace GolovinskyAPI.Controllers
             if (res == null)
             {
                 return Ok(new { 
-                    Message = "Не верный поддомен магазина", 
+                    Message = $"Извините, магазин {url}.головинский.рф не найден", 
                    // MainPicture = $"/mainimages/{mainImage}",
                    // MainPictureAccountUser = $"/mainimages/{accountMainImage}",
                 Status = false });

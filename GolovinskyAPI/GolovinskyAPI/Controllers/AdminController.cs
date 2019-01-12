@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using GolovinskyAPI.Infrastructure.Administration;
 using GolovinskyAPI.Models;
+using GolovinskyAPI.Models.ViewModels.Products;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GolovinskyAPI.Controllers
 {
-    //[Produces("application/json")]
+    [Produces("application/json")]
     [Route("api/Admin")]
     public class AdminController : ControllerBase
     {
@@ -19,10 +20,10 @@ namespace GolovinskyAPI.Controllers
         {
             repo = r;
         }
-        [HttpPost]
+        [HttpPost("api/admin/upload")]
         public IActionResult Upload([FromBody] UploadDBfromtxt model)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest("параметры запроса некорректные");
             }
