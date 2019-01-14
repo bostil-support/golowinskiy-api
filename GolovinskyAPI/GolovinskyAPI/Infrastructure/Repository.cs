@@ -15,13 +15,18 @@ using System.Text;
 using System.Text.RegularExpressions;
 using GolovinskyAPI.Models.ShopInfo;
 using System.Drawing;
+
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
+using System.Drawing.Imaging;
 
 namespace GolovinskyAPI.Infrastructure
 {
     public class Repository : IRepository
     {
+        public System.Drawing.Imaging.Encoder myEncoder;
+        public EncoderParameter myEncoderParameter;
+        public EncoderParameters myEncoderParameters;
         public float biggestside;
         public float prop;
         public int needside;
@@ -117,7 +122,7 @@ namespace GolovinskyAPI.Infrastructure
             try
             {
                 
-                System.Drawing.Image image = System.Drawing.Image.FromStream(input.Img.OpenReadStream(), true, true);
+                System.Drawing.Image image = System.Drawing.Image.FromStream(input.Img.OpenReadStream(),true, true);
                 
                 Size s = new Size(image.Width, image.Height);
                 Bitmap bmp = new Bitmap(image,s);
@@ -125,6 +130,7 @@ namespace GolovinskyAPI.Infrastructure
                 
                 if(image.Width>image.Height)
                 {
+                    
                     biggestside = image.Width;
                     prop = biggestside / image.Height;
                     float newheight = 720 / prop;
@@ -132,10 +138,17 @@ namespace GolovinskyAPI.Infrastructure
                     if (biggestside > 720)
                     {
                         
-                        Bitmap bmp2 = new Bitmap(bmp, new Size(720,needside));
+
+                        Bitmap bmp2 = new Bitmap(image, new Size(720,needside));
+                        Rectangle rectangle = new Rectangle(0,0,bmp2.Width,bmp2.Height);
+                        BitmapData bitmapData = bmp2.LockBits(rectangle,ImageLockMode.ReadWrite,PixelFormat.Format24bppRgb);
+                        bmp2.UnlockBits(bitmapData);
+
+                       
                         using (var ms = new MemoryStream())
                         {
-                            bmp2.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                            
+                            bmp2.Save(ms,System.Drawing.Imaging.ImageFormat.Png);
                             fileBytes = ms.ToArray();
 
                         }
@@ -186,7 +199,10 @@ namespace GolovinskyAPI.Infrastructure
                     needside = Convert.ToInt32(newweight);
                     if (biggestside > 720)
                     {
-                        Bitmap bmp3 = new Bitmap(bmp, new Size(needside, 720));
+                        Bitmap bmp3 = new Bitmap(image, new Size(needside, 720));
+                        Rectangle rectangle = new Rectangle(0, 0, bmp3.Width, bmp3.Height);
+                        BitmapData bitmapData = bmp3.LockBits(rectangle, ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+                        bmp3.UnlockBits(bitmapData);
                         using (var ms = new MemoryStream())
                         {
                             bmp3.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
