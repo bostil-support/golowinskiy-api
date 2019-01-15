@@ -37,8 +37,8 @@ namespace GolovinskyAPI.Controllers
             {
                 return Ok(new { 
                     Message = $"Извините, магазин {url}.головинский.рф не найден", 
-                   // MainPicture = $"/mainimages/{mainImage}",
-                   // MainPictureAccountUser = $"/mainimages/{accountMainImage}",
+                    MainPicture = $"/mainimages/{mainImage}",
+                    MainPictureAccountUser = $"/mainimages/{accountMainImage}",
                 Status = false });
             }
             res.MainPicture = $"/mainimages/{mainImage}";
