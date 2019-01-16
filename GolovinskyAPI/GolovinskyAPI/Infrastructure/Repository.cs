@@ -148,7 +148,7 @@ namespace GolovinskyAPI.Infrastructure
                         using (var ms = new MemoryStream())
                         {
                             
-                            bmp2.Save(ms,System.Drawing.Imaging.ImageFormat.Png);
+                            bmp2.Save(ms,System.Drawing.Imaging.ImageFormat.Jpeg);
                             fileBytes = ms.ToArray();
 
                         }
@@ -205,7 +205,7 @@ namespace GolovinskyAPI.Infrastructure
                         bmp3.UnlockBits(bitmapData);
                         using (var ms = new MemoryStream())
                         {
-                            bmp3.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                            bmp3.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                             fileBytes = ms.ToArray();
 
                         }
@@ -229,7 +229,7 @@ namespace GolovinskyAPI.Infrastructure
                     {
                         using (var ms = new MemoryStream())
                         {
-                            bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                            bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                             fileBytes = ms.ToArray();
 
                         }
@@ -254,7 +254,7 @@ namespace GolovinskyAPI.Infrastructure
                {
                     using (var ms = new MemoryStream())
                     {
-                        bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                        bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                         fileBytes = ms.ToArray();
                         
                     }
