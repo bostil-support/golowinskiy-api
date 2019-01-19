@@ -14,10 +14,10 @@ namespace GolovinskyAPI.Services
             string date = DateTime.Now.ToString("dd.MM.yyyy");
             string searchresult = prefix + date;
             var directoryFiles = Directory.GetFiles("wwwroot/Images");
-            string image = Array.Find(directoryFiles, s => s.StartsWith(searchresult));
+            var image = Array.Find(directoryFiles, s => s.StartsWith(searchresult));
             if(directoryFiles.Contains(image))
             {
-                var result = image;
+                var result = image.Substring(image.LastIndexOf('\\') + 1); ;
                 return result;
             }
             else
@@ -32,16 +32,6 @@ namespace GolovinskyAPI.Services
 
             }
             
-           
-           
-          
-
-
-
-
-
-
-
         }
 
         public string GetMainImageUserAccount()
@@ -54,7 +44,7 @@ namespace GolovinskyAPI.Services
             string image = Array.Find(directoryFiles, s => s.StartsWith(searchresult));
             if(directoryFiles.Contains(image))
             {
-                var result = image;
+                var result = image.Substring(image.LastIndexOf('\\') + 1); 
                 return result;
             }
             else

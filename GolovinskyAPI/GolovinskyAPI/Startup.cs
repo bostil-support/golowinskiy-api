@@ -1,5 +1,6 @@
 ﻿using GolovinskyAPI.Controllers;
 using GolovinskyAPI.Infrastructure;
+using GolovinskyAPI.Infrastructure.Administration;
 using GolovinskyAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -33,6 +34,7 @@ namespace GolovinskyAPI
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddTransient<IRepository, Repository>(provider => new Repository(connection));
             services.AddTransient<IProductRepository, ProductRepository>(provider => new ProductRepository(connection));
+            services.AddTransient<ITemplateRepository, TemplateRepository>(provider => new TemplateRepository(connection));
             services.AddOptions();
             services.AddMvc();
             
