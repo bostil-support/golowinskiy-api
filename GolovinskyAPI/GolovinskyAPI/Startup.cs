@@ -97,7 +97,7 @@ namespace GolovinskyAPI
                 FileProvider = new PhysicalFileProvider(
                     Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
                     
-                //RequestPath = "/mainimages"
+                RequestPath = "/mainimages"
             });
         }
     }

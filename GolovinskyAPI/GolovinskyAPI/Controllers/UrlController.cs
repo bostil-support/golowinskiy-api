@@ -37,16 +37,16 @@ namespace GolovinskyAPI.Controllers
             {
                 return Ok(new { 
                     Message = $"Извините, магазин {url}.головинский.рф не найден", 
-                    MainPicture = $"{mainImage}",
-                    MainPictureAccountUser = $"{accountMainImage}",
+                    MainPicture = $"/mainimages/{mainImage}",
+                    MainPictureAccountUser = $"/mainimages/{accountMainImage}",
                 Status = false });
             }
-            res.MainPicture = $"{mainImage}";
-            res.MainPictureAccountUser = $"{accountMainImage}";
+            res.MainPicture = $"/mainimages/{mainImage}";
+            res.MainPictureAccountUser = $"/mainimages/{accountMainImage}";
             return Ok(new { 
                 cust_id = res.cust_id, 
                 mainImage = res.MainPicture,
-                accountMainImage = res.MainPictureAccountUser });
+                mainPictureAccountUser = res.MainPictureAccountUser });
         }
     }
 }
