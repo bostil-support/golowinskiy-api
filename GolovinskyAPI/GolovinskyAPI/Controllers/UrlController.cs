@@ -38,11 +38,11 @@ namespace GolovinskyAPI.Controllers
                 return Ok(new { 
                     Message = $"Извините, магазин {url}.головинский.рф не найден", 
                     MainPicture = $"/mainimages/{mainImage}",
-                    MainPictureAccountUser = $"/mainimages/{accountMainImage}",
+                    MainPictureAccountUser = $"/accountImages/{accountMainImage}",
                 Status = false });
             }
             res.MainPicture = $"/mainimages/{mainImage}";
-            res.MainPictureAccountUser = $"/mainimages/{accountMainImage}";
+            res.MainPictureAccountUser = $"/accountImages/{accountMainImage}";
             return Ok(new { 
                 cust_id = res.cust_id, 
                 mainImage = res.MainPicture,
