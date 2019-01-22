@@ -21,7 +21,8 @@ go
 Exec sp_UpdateMobileDBfromTxtFiles  @Path='C:\Users\boikochev\Documents\TestUp\'
 go
   
-Exec sp_GetShopInfo @URL='golovinskiy'
+Exec sp_SearchPictureInfo @AppCode = '19139',@Cust_ID=41609 ,@Prc_ID=18226
+
 Go
   
   

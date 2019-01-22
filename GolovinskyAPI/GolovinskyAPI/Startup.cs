@@ -95,8 +95,9 @@ namespace GolovinskyAPI
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", "Images")),
-                RequestPath = "/mainimages"
+                    Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
+                    
+                //RequestPath = "/mainimages"
             });
         }
     }

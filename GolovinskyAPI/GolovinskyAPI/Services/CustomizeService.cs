@@ -35,7 +35,7 @@ namespace GolovinskyAPI.Services
         }
 
         public string GetMainImageUserAccount()
-          {
+        {
 
             string prefix = "wwwroot/AccountImages\\";
             string date = DateTime.Now.ToString("dd.MM.yyyy");
