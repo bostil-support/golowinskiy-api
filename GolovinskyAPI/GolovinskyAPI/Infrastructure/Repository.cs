@@ -541,5 +541,27 @@ namespace GolovinskyAPI.Infrastructure
             item.IdCategories = item.idcrumbs.Split(';').ToList();
             item.NameCategories = item.txtcrumbs.Split(';').ToList();
         }
+
+        public bool Pay(NewOrderItemInputModel input)
+        {
+            string res;
+            using (IDbConnection db = new SqlConnection(connection))
+            {
+                res = db.Query<string>("sp_AddNewOrdItem", new
+                {
+                    OrdTtl_Id = input.OrdTtl_Id,
+                    OI_No = input.OI_No,
+                    Ctlg_No = input.Ctlg_No,
+                    Qty = input.Qty,
+                    Ctlg_Name = input.Ctlg_Name,
+                    Sup_ID = input.Sup_ID,
+                    Descr = input.Descr
+                },
+                    commandType: CommandType.StoredProcedure).FirstOrDefault();
+            }
+            if (res != "1")
+                return false;
+            return true;
+        }
     }
 }
