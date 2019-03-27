@@ -444,7 +444,6 @@ namespace GolovinskyAPI.Infrastructure
                 result = new NewOrderOutputModel
                 {
                     Ord_ID = p.Get<int?>("@Ord_ID"),
-                    Ord_No = p.Get<dynamic>("@Ord_No")
                 };
             }
             return result;
