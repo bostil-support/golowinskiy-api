@@ -13,5 +13,8 @@ namespace GolovinskyAPI.Models.ViewModels.Categories
         public int? CID { get; set; }
         
         public char? advert { get; set; }
+
+        //Id авторизованноо клиента
+        public int? Cust_Id { get; set; }
     }
 }

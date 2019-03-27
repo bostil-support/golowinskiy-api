@@ -8,6 +8,7 @@ using GolovinskyAPI.Models.ViewModels.Categories;
 using GolovinskyAPI.Models.ViewModels.CustomerInfo;
 using GolovinskyAPI.Models.ViewModels.Images;
 using GolovinskyAPI.Models.ShopInfo;
+using GolovinskyAPI.Models.ViewModels.Mobile;
 using Microsoft.AspNetCore.Http;
 
 namespace GolovinskyAPI.Infrastructure
@@ -35,8 +36,8 @@ namespace GolovinskyAPI.Infrastructure
         bool UpdateAdditionalPictureToProduct(NewAdditionalPictureInputModel input);
         bool DeleteAdditionalPictureToProduct(DeleteAdditionalInputModel input);
         ShopInfo GetSubDomain(string url);
-        
-
+        bool AddInetMobileOrder(AddInetMobileOrdeModel input);
+        List<OutMobileDbModel> GetMobileDB(GetMobileDbModel input);
         CustomerInfoOutput GetCustomerFIO(int CustID);
     }
 }

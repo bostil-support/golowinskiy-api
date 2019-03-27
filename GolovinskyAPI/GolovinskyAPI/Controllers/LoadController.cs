@@ -7,6 +7,7 @@ using GolovinskyAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using GolovinskyAPI.Models.ViewModels.Categories;
+using GolovinskyAPI.Models.ViewModels.Mobile;
 
 namespace GolovinskyAPI.Controllers
 {
@@ -62,6 +63,24 @@ namespace GolovinskyAPI.Controllers
             List<SearchAvitoPictureOutput> outputCategories = repo.GetCategoryItems(model);   
             
             return Ok(catRecursion.GenerateCategories(outputCategories));
+        }
+
+        [HttpPost("/api/getMobileDB/")]
+        public IActionResult GetMobileDB([FromBody] GetMobileDbModel model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            return Ok(repo.GetMobileDB(model));
+        }
+
+        [HttpPut("/api/addInetMobileOrder/")]
+        public IActionResult AddInetMobileOrder([FromBody] AddInetMobileOrdeModel model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            return Ok(repo.AddInetMobileOrder(model));
         }
     }
 }

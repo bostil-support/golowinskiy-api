@@ -45,10 +45,10 @@ namespace GolovinskyAPI.Controllers
             }
 
             NewOrderOutputModel res = repo.AddNewOrder(model);
-            if(res.Ord_No == null)
-            {
-                return Ok(new { Message = "Не верный id пользователя", Status = false });
-            }
+            //if(res.Ord_No == null)
+            //{
+            //    return Ok(new { Message = "Не верный id пользователя", Status = false });
+            //}
             return Ok(res);
         }
 
@@ -103,7 +103,7 @@ namespace GolovinskyAPI.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [Authorize]
+      //  [Authorize]
         [HttpPost("/api/order/save/")]
         public IActionResult SaveOrder([FromBody] NewOrderShippingInputModel model)
         {

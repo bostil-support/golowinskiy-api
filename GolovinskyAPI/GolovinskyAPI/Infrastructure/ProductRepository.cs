@@ -27,11 +27,22 @@ namespace GolovinskyAPI.Infrastructure
             using (IDbConnection db = new SqlConnection(connection))
             {
                 res = db.Query<NewProductOutputModel>("sp_SearchCreateAvito",
-                    new {Catalog = model.Catalog,Id=model.Id,Ctlg_Name=model.Ctlg_Name,
-                    TArticle =model.TArticle, TName =model.TName, TDescription =model.TDescription,
-                    TCost =model.TCost, TImageprev =model.TImageprev, Appcode =model.Appcode,
-                    TypeProd =model.TypeProd, PrcNt = model.PrcNt, TransformMech = model.TransformMech, video =model.video, CID =model.CID},
-                             commandType: CommandType.StoredProcedure).First();
+                    new {
+                        Catalog = model.Catalog,
+                        Id = model.Id,
+                        Ctlg_Name = model.Ctlg_Name,
+                        TArticle  =model.TArticle,
+                        TName = model.TName,
+                        TDescription = model.TDescription,
+                        TCost = model.TCost,
+                        TImageprev = model.TImageprev,
+                        Appcode = model.Appcode,
+                        TypeProd = model.TypeProd,
+                        PrcNt = model.PrcNt,
+                        TransformMech = model.TransformMech,
+                        video = model.video,
+                        CID = model.CID},
+                       commandType: CommandType.StoredProcedure).First();
             }      
             return res;
         }

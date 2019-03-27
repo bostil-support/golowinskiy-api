@@ -14,10 +14,10 @@ namespace GolovinskyAPI
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-             //.UseKestrel(o =>
-             //{
-             //    o.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(30);
-             //})
+            .UseKestrel(o =>
+            {
+                //o.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(30);
+            })
             .UseIISIntegration()
             .UseStartup<Startup>()
                 .Build();

@@ -105,7 +105,7 @@ namespace GolovinskyAPI.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpDelete("/api/img/")]
-        [Authorize]
+       // [Authorize]
         public IActionResult Delete([FromBody] SearchPictureInfoInputModel model)
         {
             if (!ModelState.IsValid)

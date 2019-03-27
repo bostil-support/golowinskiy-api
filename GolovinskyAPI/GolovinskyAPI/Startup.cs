@@ -39,7 +39,6 @@ namespace GolovinskyAPI
             services.AddOptions();
             services.AddMvc();
             
-            
 
             services.Configure<AuthServiceModel>(Configuration.GetSection("AuthService"));
             var result = Configuration.GetSection("AuthService").GetChildren();
