@@ -1,0 +1,25 @@
+{
+  "name": "golowinskiy-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bostil-support/golowinskiy-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bostil-support/golowinskiy-api/issues"
+  },
+  "homepage": "https://github.com/bostil-support/golowinskiy-api#readme",
+  "devDependencies": {
+    "grunt": "^1.0.4",
+    "grunt-cli": "^1.3.2",
+    "grunt-sass": "^3.0.2",
+    "node-sass": "*"
+  }
+}

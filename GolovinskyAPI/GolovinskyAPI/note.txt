@@ -1,0 +1,25 @@
+﻿/*
+         function ulmenu($arr, $level=0)
+{
+    if (empty($arr) || !is_array($arr) || sizeof($arr)<1) return;
+    // using a prefix is optional, for the purpose of learning,
+    // it makes the output more readable
+    $spaceprefix = str_repeat(" ", $level*4);
+    echo "\n${spaceprefix}<ul>\n";
+    foreach ($arr as $key => $value)
+    {
+        echo "${spaceprefix}  <li>${key}";
+        if (is_array($value))
+        {
+            // recursive call of limenu
+            ulmenu($value, $level+1);
+        }
+        else
+        {
+            echo " : ${value}";
+        }
+        echo "</li>\n";
+    }
+    echo "${spaceprefix}</ul>";
+}
+         */

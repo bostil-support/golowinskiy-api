@@ -1,0 +1,57 @@
+﻿@model List<SearchPictureOutputModel>
+
+<div class="ps-products-wrap pt-80 pb-80">
+    <div class="ps-products" data-mh="product-listing">
+        <div class="ps-product__columns">
+            @foreach (var item in Model)
+            {
+                <div class="ps-product__column">
+                    <div class="ps-shoe mb-30">
+                        <div class="ps-shoe__thumbnail">
+                            <a class="ps-shoe__favorite" href="#">
+                                <i class="ps-icon-heart"></i>
+                            </a>
+                            <image-product name=@item.Image_Base />
+                            <a class="ps-shoe__overlay" href="product-detail.html"></a>
+                        </div>
+                        <div class="ps-shoe__content">
+                            <div class="ps-shoe__variants">
+                                <div class="ps-shoe__variant normal owl-carousel owl-theme owl-loaded">
+                                    <div class="owl-stage-outer">
+                                        <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 260px;">
+                                            <div class="owl-item active" style="width: 45px; margin-right: 20px;">
+                                                <img src="/images/shoe/2.jpg" alt="">
+                                            </div>
+                                            <div class="owl-item active" style="width: 45px; margin-right: 20px;">
+                                                <img src="/images/shoe/3.jpg" alt="">
+                                            </div>
+                                            <div class="owl-item active" style="width: 45px; margin-right: 20px;">
+                                                <img src="/images/shoe/4.jpg" alt="">
+                                            </div>
+                                            <div class="owl-item active" style="width: 45px; margin-right: 20px;">
+                                                <img src="/images/shoe/5.jpg" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="owl-controls">
+                                        <div class="owl-nav">
+                                            <div class="owl-prev" style=""><i class="ps-icon-back"></i></div>
+                                            <div class="owl-next" style=""><i class="ps-icon-next"></i></div>
+                                        </div>
+                                        <div class="owl-dots" style="display: none;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ps-shoe__detail">
+                                <a class="ps-shoe__name" href="#">@item.TName</a>
+                                <p class="ps-shoe__categories"><a href="#">Men shoes</a>,<a href="#"> Nike</a>,<a href="#"> Jordan</a></p><span class="ps-shoe__price">
+                                    <del>@item.Prc_Br</del> @item.Prc_Br
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

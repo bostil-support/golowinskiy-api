@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\GolovinskyAPI"
+    "\\GolovinskyAPI",
+    "\\GolovinskyAPI\\GolovinskyAPI",
+    "\\GolovinskyAPI\\GolovinskyAPI\\Views\\Shared"
   ],
-  "SelectedNode": "\\GolovinskyAPI\\GolovinskyAPI.sln",
+  "SelectedNode": "\\GolovinskyAPI\\GolovinskyAPI\\package.json",
   "PreviewInSolutionExplorer": false
 }

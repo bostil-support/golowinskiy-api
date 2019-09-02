@@ -1,12 +1,6 @@
-﻿using GolovinskyAPI.Controllers;
-using GolovinskyAPI.Infrastructure;
-using GolovinskyAPI.Infrastructure.Administration;
-using GolovinskyAPI.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +10,10 @@ using Swashbuckle.AspNetCore.Swagger;
 using System.IO;
 using System.Linq;
 using System.Text;
+using GolovinskyAPI.Infrastructure;
+using GolovinskyAPI.Infrastructure.Administration;
+using GolovinskyAPI.Services;
+using GolovinskyAPI.Services.Interfaces;
 
 namespace GolovinskyAPI
 {
@@ -36,10 +34,13 @@ namespace GolovinskyAPI
             services.AddTransient<IRepository, Repository>(provider => new Repository(connection));
             services.AddTransient<IProductRepository, ProductRepository>(provider => new ProductRepository(connection));
             services.AddTransient<ITemplateRepository, TemplateRepository>(provider => new TemplateRepository(connection));
+            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IImageService, ImageService>();
             services.AddOptions();
             services.AddMvc();
-            
 
+            services.Configure<AppSettings>(Configuration);
             services.Configure<AuthServiceModel>(Configuration.GetSection("AuthService"));
             var result = Configuration.GetSection("AuthService").GetChildren();
             services.AddSwaggerGen(c =>
@@ -83,7 +84,12 @@ namespace GolovinskyAPI
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseAuthentication();
-            app.UseMvc();
+            app.UseMvc(routes => 
+            {
+               routes.MapRoute(
+                  name: "default",
+                  template: "{controller=Home}/{action=Index}/{id?}");
+            });
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -93,7 +99,7 @@ namespace GolovinskyAPI
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot","Images")),
+                    Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot","images")),
                     
                 RequestPath = "/mainimages"
 
@@ -101,7 +107,7 @@ namespace GolovinskyAPI
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", "AccountImages")),
+                    Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", "images/account")),
 
                 RequestPath = "/accountImages"
 

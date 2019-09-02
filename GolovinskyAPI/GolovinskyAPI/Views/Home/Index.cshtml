@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="ps-products-wrap pt-80 pb-80">
+    <div class="ps-products" data-mh="product-listing">
+        
+    </div>
+    <div class="ps-sidebar" data-mh="product-listing">
+        @await Component.InvokeAsync("Categories", new { storeId = "19139" })
+    </div>
+
+</div>
+
+
