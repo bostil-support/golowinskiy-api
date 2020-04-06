@@ -137,8 +137,9 @@ namespace GolovinskyAPI.Infrastructure
                     needside = Convert.ToInt32(newheight);
                     if (biggestside > 720)
                     {
-                        
 
+                        var ts = DateTime.Now;
+                        Console.WriteLine("Image compressing started at " + ts.ToString());
                         Bitmap bmp2 = new Bitmap(image, new Size(720,needside));
                         Rectangle rectangle = new Rectangle(0,0,bmp2.Width,bmp2.Height);
                         BitmapData bitmapData = bmp2.LockBits(rectangle,ImageLockMode.ReadWrite,PixelFormat.Format24bppRgb);
@@ -159,11 +160,14 @@ namespace GolovinskyAPI.Infrastructure
                             Img = fileBytes
                         };
                         string resObj;
+                        Console.WriteLine("Image compressing done/ elapsed " + (DateTime.Now - ts).TotalMilliseconds);
+                        ts = DateTime.Now;
                         using (dbConnection)
                         {
                             resObj = dbConnection.Query<string>("sp_UploadMobileDBPictAll", result,
                                 commandType: CommandType.StoredProcedure).First();
                         }
+                        Console.WriteLine("uploading image done. elapsed " + (DateTime.Now - ts).TotalMilliseconds);
                         return (resObj == "1");
                     }
                     else

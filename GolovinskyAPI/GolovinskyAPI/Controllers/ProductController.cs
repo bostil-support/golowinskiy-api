@@ -34,12 +34,16 @@ namespace GolovinskyAPI.Controllers
        // [Authorize]
         public IActionResult Post([FromBody] NewProductInputModel model)
         {
+            var ts = DateTime.Now;
+            Console.WriteLine();
+            Console.WriteLine("Product Post request started" + ts.ToString());
             if (!ModelState.IsValid)
             {
                 return BadRequest("Не верные параметры в запросе");
             }
 
             var res = repo.InsertProduct(model);
+            Console.WriteLine("Product Post request ended " + (DateTime.Now - ts).TotalMilliseconds);
             return Ok(new { result = res.Result, prc_id = res.Prc_ID });
         }
 

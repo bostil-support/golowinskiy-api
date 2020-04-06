@@ -89,11 +89,15 @@ namespace GolovinskyAPI.Controllers
         //[Authorize]
         public IActionResult Upload([FromForm] NewUploadImageInput model)
         {
+            Console.WriteLine();
+            var ts = DateTime.Now;
+            Console.WriteLine("upload request started" + ts.ToString());
             if (!ModelState.IsValid)
             {
                 return BadRequest("параметры запроса некорректные");
             }
             bool res = repo.UploadPicture(model);
+            Console.WriteLine("upload request ended " + (DateTime.Now - ts).TotalMilliseconds);
             return Ok(new { result = res });
         }
 

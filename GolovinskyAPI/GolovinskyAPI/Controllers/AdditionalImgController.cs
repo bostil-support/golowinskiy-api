@@ -34,11 +34,16 @@ namespace GolovinskyAPI.Controllers
         //[Authorize]
         public IActionResult Post([FromBody] NewAdditionalPictureInputModel model)
         {
+            var ts = DateTime.Now;
+            Console.WriteLine();
+            Console.WriteLine("AdditionalImg request started" + ts.ToString());
             if (!ModelState.IsValid)
             {
                 return BadRequest( new { result = false, message = "Не корректный запрос"});
             }
-            return Ok(repo.InsertAdditionalPictureToProduct(model));
+            var res = repo.InsertAdditionalPictureToProduct(model);
+            Console.WriteLine("AdditionalImg request ended " + (DateTime.Now - ts).TotalMilliseconds);
+            return Ok(res);
         }
 
         /// <summary>
