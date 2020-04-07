@@ -10,7 +10,7 @@ namespace GolovinskyAPI.Models
     {
         [Required]
         [EmailAddress]
-        public string EMail { get; set; }
+        public string Phone { get; set; }
         [Required]
         public string Cust_ID_Main { get; set; }
     }

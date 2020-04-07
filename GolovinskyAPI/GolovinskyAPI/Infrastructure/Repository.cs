@@ -389,15 +389,22 @@ namespace GolovinskyAPI.Infrastructure
             return res;
         }
 
-        public string RecoveryPassword(PasswordRecoveryInput input)
+        private class passrecResponse
         {
-            string res;
+            public string Respond { get; set; }
+            public string Passw { get; set; }
+        }
+
+        public string[] RecoveryPassword(PasswordRecoveryInput input)
+        {
+            //string res;
             using (IDbConnection db = new SqlConnection(connection))
             {
-                res = db.Query<string>("sp_RecoveryPassword", new { E_mail = input.EMail, Cust_ID_Main = input.Cust_ID_Main },
+                var answ = db.Query<passrecResponse>("sp_RecoveryPassword", new { Phone = input.Phone, Cust_ID_Main = input.Cust_ID_Main },
                                 commandType: CommandType.StoredProcedure).FirstOrDefault();
+                var res = new string[] { answ.Respond, answ.Passw };
+                return res;
             }
-            return res;
         }
 
         public RegisterOutputModel AddWebCustomerCompany(RegisterInputModel input)

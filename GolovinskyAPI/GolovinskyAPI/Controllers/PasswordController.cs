@@ -32,10 +32,10 @@ namespace GolovinskyAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] PasswordRecoveryInput model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest();
+            //}
             
             var res = repo.RecoveryPassword(model);
             if (res.Length == 0)
@@ -49,9 +49,9 @@ namespace GolovinskyAPI.Controllers
             else
             {
                 EmailService emailService = new EmailService();
-                await emailService.SendEmailAsync(model.EMail, "Востановление пароля Головинский", res);
+                await emailService.SendEmailAsync(res[0], "Востановление пароля Головинский", res[1]);
                 return Ok(new {
-                    Message = $"Ваш пароль отправлен на email: { model.EMail }",
+                    Message = $"Ваш пароль отправлен на email: { res[0] }",
                     Founded = true
                 });
             }
