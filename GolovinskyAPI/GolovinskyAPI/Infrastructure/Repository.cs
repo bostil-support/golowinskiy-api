@@ -393,6 +393,7 @@ namespace GolovinskyAPI.Infrastructure
         {
             public string Respond { get; set; }
             public string Passw { get; set; }
+            public string SiteTxt { get; set; }
         }
 
         public string[] RecoveryPassword(PasswordRecoveryInput input)
@@ -402,7 +403,7 @@ namespace GolovinskyAPI.Infrastructure
             {
                 var answ = db.Query<passrecResponse>("sp_RecoveryPassword", new { Phone = input.Phone, Cust_ID_Main = input.Cust_ID_Main },
                                 commandType: CommandType.StoredProcedure).FirstOrDefault();
-                var res = new string[] { answ.Respond, answ.Passw };
+                var res = new string[] { answ.Respond, answ.Passw, answ.SiteTxt };
                 return res;
             }
         }

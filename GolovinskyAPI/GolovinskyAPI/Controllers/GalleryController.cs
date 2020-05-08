@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GolovinskyAPI.Infrastructure;
 using GolovinskyAPI.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ namespace GolovinskyAPI.Controllers
 {
     [Produces("application/json")]
     [Route("api/Gallery")]
+    [DisableCors]
     public class GalleryController : Controller
     {
         IRepository repo;

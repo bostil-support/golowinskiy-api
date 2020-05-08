@@ -7,6 +7,7 @@ using GolovinskyAPI.Infrastructure;
 using GolovinskyAPI.Models;
 using GolovinskyAPI.Models.ViewModels.Images;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,7 @@ namespace GolovinskyAPI.Controllers
     //[Produces("application/json")]
     [Route("api/Img")]
     [DisableRequestSizeLimit]
+    [DisableCors]
     public class ImgController : ControllerBase
     {
 
@@ -69,6 +71,36 @@ namespace GolovinskyAPI.Controllers
             else
             {
                 var res = repo.SearchPictureInfo(model);
+                if (res != null)
+                {
+                    return Ok(res);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+        }
+
+        [HttpPost("ImagesInfo")]
+        public IActionResult ImagesInfo([FromBody] SearchPicturesInfoInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                List<SearchPictureInfoOutputModel> res = new List<SearchPictureInfoOutputModel>();
+                var prcIds = repo.SearchPicture(new SearchPictureInputModel
+                {
+                    ID = model.CategoryId
+                });
+                foreach (var item in prcIds)
+                {
+                    var respart = repo.SearchPictureInfo(new SearchPictureInfoInputModel { AppCode = model.AppCode,Cust_ID = model.Cust_ID, Prc_ID = item.Prc_ID});
+                    res.Add(respart);
+                }
                 if (res != null)
                 {
                     return Ok(res);

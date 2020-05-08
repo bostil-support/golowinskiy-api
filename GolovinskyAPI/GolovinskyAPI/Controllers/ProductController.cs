@@ -8,6 +8,7 @@ using GolovinskyAPI.Infrastructure;
 using GolovinskyAPI.Models.ViewModels.Products;
 using Microsoft.AspNetCore.Authorization;
 using GolovinskyAPI.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace GolovinskyAPI.Controllers
 {
@@ -16,6 +17,7 @@ namespace GolovinskyAPI.Controllers
     /// </summary>
     [Produces("application/json")]
     [Route("api/Product")]
+    [DisableCors]
     public class ProductController : ControllerBase
     {
         IProductRepository repo;

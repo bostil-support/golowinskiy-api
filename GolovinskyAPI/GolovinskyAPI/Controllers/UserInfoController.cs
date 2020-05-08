@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using GolovinskyAPI.Models.ViewModels.CustomerInfo;
 using GolovinskyAPI.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 
 namespace GolovinskyAPI.Controllers
 {
     [Produces("application/json")]
     [Route("api/UserInfo")]
+    [DisableCors]
     public class UserInfoController : ControllerBase
     {
         IRepository repo;

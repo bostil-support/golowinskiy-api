@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using GolovinskyAPI.Models.ViewModels.Categories;
 using GolovinskyAPI.Models.ViewModels.Mobile;
+using Microsoft.AspNetCore.Cors;
 
 namespace GolovinskyAPI.Controllers
 {
     [Produces("application/json")]
     [Route("api/Load")]
+    [DisableCors]
     public class LoadController : ControllerBase
     {
         IRepository repo;

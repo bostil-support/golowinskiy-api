@@ -36,6 +36,7 @@ namespace GolovinskyAPI
             services.AddTransient<IRepository, Repository>(provider => new Repository(connection));
             services.AddTransient<IProductRepository, ProductRepository>(provider => new ProductRepository(connection));
             services.AddTransient<ITemplateRepository, TemplateRepository>(provider => new TemplateRepository(connection));
+            services.AddTransient<ISms_aero, Sms_aero>();
             services.AddOptions();
             services.AddMvc();
             
@@ -75,10 +76,12 @@ namespace GolovinskyAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            var origins = Configuration.GetSection("CorsOrigins").GetChildren().ToArray().Select(c => c.Value).ToArray();
             app.UseCors(builder => builder.AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader()
-                .AllowCredentials());
+//                .AllowCredentials()
+                );
             app.UseDeveloperExceptionPage();
             app.UseDefaultFiles();
             app.UseStaticFiles();

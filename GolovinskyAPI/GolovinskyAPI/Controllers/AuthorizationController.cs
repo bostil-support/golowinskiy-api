@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Options;
 using GolovinskyAPI.Services;
+using Microsoft.AspNetCore.Cors;
 
 namespace GolovinskyAPI.Controllers
 {
@@ -22,6 +23,7 @@ namespace GolovinskyAPI.Controllers
     /// <returns></returns>
     [Produces("application/json")]
     [Route("api/Authorization")]
+    [DisableCors]
     public class AuthorizationController : ControllerBase
     {
         IRepository repo;

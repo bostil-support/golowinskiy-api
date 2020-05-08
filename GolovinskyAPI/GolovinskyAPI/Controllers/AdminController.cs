@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using GolovinskyAPI.Infrastructure.Administration;
 using GolovinskyAPI.Models;
 using GolovinskyAPI.Models.ViewModels.Products;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,7 @@ namespace GolovinskyAPI.Controllers
     /// </summary>
     /// <returns></returns>
     [Produces("application/json")]
+    [DisableCors]
     //[Route("api/Admin")]
     public class AdminController : ControllerBase
     {

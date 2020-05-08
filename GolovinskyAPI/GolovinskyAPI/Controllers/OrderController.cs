@@ -8,6 +8,7 @@ using GolovinskyAPI.Models;
 using GolovinskyAPI.Models.Orders;
 using GolovinskyAPI.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 
 namespace GolovinskyAPI.Controllers
 {
@@ -17,6 +18,7 @@ namespace GolovinskyAPI.Controllers
     /// <returns></returns>
     [Produces("application/json")]
     [Route("api/order")]
+    [DisableCors]
     public class OrderController : ControllerBase
     {
         IRepository repo;

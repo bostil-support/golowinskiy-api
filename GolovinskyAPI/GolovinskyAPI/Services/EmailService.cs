@@ -12,7 +12,7 @@ namespace GolovinskyAPI.Services
         {
             var emailMessage = new MimeMessage();
 
-            emailMessage.From.Add(new MailboxAddress("Администрация сайта", "admin@golovinskiy.bostil.ru"));
+            emailMessage.From.Add(new MailboxAddress("Администрация сайта", "recpassw@tehnocom.pro"));
             emailMessage.To.Add(new MailboxAddress("", email));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart("Plain")
@@ -25,8 +25,8 @@ namespace GolovinskyAPI.Services
                 try
                 {
                     client.ServerCertificateValidationCallback = (s, c, h, e) => true;
-                    await client.ConnectAsync("mail.bostil.ru", 25, SecureSocketOptions.Auto);
-                    await client.AuthenticateAsync("golovinskiy@bostil.ru", "bostil123");
+                    await client.ConnectAsync("mail.nic.ru", 465, SecureSocketOptions.Auto);
+                    await client.AuthenticateAsync("recpassw@tehnocom.pro", "RecPa$sw9");
                     await client.SendAsync(emailMessage);
                 }
                 catch (Exception ex)

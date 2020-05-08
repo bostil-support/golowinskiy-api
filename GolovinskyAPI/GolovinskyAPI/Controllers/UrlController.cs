@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Http.Extensions;
 using GolovinskyAPI.Infrastructure;
 using GolovinskyAPI.Models.ShopInfo;
 using GolovinskyAPI.Services;
+using Microsoft.AspNetCore.Cors;
 
 namespace GolovinskyAPI.Controllers
 {
     [Produces("application/json")]
     [Route("api/shopinfo")]
+    [DisableCors]
     public class UrlController : ControllerBase
     {
         IRepository repo;
@@ -35,7 +37,7 @@ namespace GolovinskyAPI.Controllers
             ShopInfo res = repo.GetSubDomain(url);
             if (res == null)
             {
-                return Ok(new { 
+                return NotFound(new { 
                     Message = $"Извините, магазин {url}.головинский.рф не найден", 
                     MainPicture = $"/mainimages/{mainImage}",
                     MainPictureAccountUser = $"/accountImages/{accountMainImage}",
