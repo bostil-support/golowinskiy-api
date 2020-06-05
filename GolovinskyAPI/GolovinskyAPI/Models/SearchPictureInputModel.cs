@@ -25,4 +25,22 @@ namespace GolovinskyAPI.Models
         [BindRequired]
         public int? CID { get; set; } = null;
     }
+
+    public class PageIngoInput
+    {
+        /// <summary>
+        /// номер страницы
+        /// </summary>
+        public int PageNumber { get; set; }
+        /// <summary>
+        /// записей на странице
+        /// </summary>
+        public int CountOnPage { get; set; }
+    }
+    public class PageInfoOutput
+    {
+        public int TotalPages { get; set; }
+        public int PageNumber { get; set; }
+        public int CountOnPage { get; set; }
+    }
 }
